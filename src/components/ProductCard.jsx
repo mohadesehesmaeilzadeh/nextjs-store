@@ -9,19 +9,19 @@ const Card = styled.article`
   min-width: 0;
   height: 100%;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  gap: 1.05rem;
+  border: 1px solid rgba(229, 222, 213, 0.9);
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surface};
-  padding: ${({ theme }) => theme.spacing.md};
-  box-shadow: 0 2px 8px rgba(23, 32, 42, 0.04);
+  padding: 0.85rem;
+  box-shadow: 0 4px 16px rgba(55, 47, 38, 0.045);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
     transform 160ms ease;
 
   &:hover {
-    border-color: rgba(23, 107, 135, 0.45);
+    border-color: rgba(189, 111, 69, 0.42);
     box-shadow: ${({ theme }) => theme.shadows.card};
     transform: translateY(-2px);
   }
@@ -29,10 +29,20 @@ const Card = styled.article`
 
 const ImageWrap = styled.div`
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 5 / 4;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radii.sm};
-  background: #eef2f6;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.2), transparent),
+    ${({ $tone }) => $tone};
+
+  &::after {
+    position: absolute;
+    inset: auto 1rem 0.85rem 1rem;
+    height: 1px;
+    background: rgba(55, 47, 38, 0.1);
+    content: "";
+  }
 `;
 
 const Content = styled.div`
@@ -40,26 +50,30 @@ const Content = styled.div`
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: 0.45rem;
+  padding: 0 0.2rem 0.15rem;
 `;
 
 const Category = styled.p`
   margin: 0;
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: 0.875rem;
-  font-weight: 700;
+  color: ${({ theme }) => theme.colors.softText};
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
 `;
 
 const Title = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colors.text};
-  font-size: 1.15rem;
-  line-height: 1.3;
+  font-size: 1.18rem;
+  line-height: 1.28;
 `;
 
 const Description = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.muted};
+  font-size: 0.96rem;
+  line-height: 1.55;
 `;
 
 const PriceRow = styled.div`
@@ -73,8 +87,8 @@ const PriceRow = styled.div`
 const Price = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.text};
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1.18rem;
+  font-weight: 850;
 `;
 
 const ButtonLink = styled(Link)`
@@ -82,27 +96,42 @@ const ButtonLink = styled(Link)`
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-radius: ${({ theme }) => theme.radii.sm};
-  background: ${({ theme }) => theme.colors.primary};
-  color: #ffffff;
-  padding: 0.65rem 0.9rem;
-  font-weight: 700;
-  transition: background 160ms ease;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 999px;
+  background: ${({ theme }) => theme.colors.surfaceWarm};
+  color: ${({ theme }) => theme.colors.primaryDark};
+  padding: 0.62rem 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
   white-space: nowrap;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
+    border-color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.primary};
+    color: #ffffff;
   }
 `;
+
+const imageTones = {
+  Electronics: "#e9f0f1",
+  Home: "#f4ece1",
+  Lifestyle: "#eef0e7",
+  Accessories: "#f3e5dc",
+};
 
 export default function ProductCard({ product }) {
   return (
     <Card>
-      <ImageWrap>
+      <ImageWrap $tone={imageTones[product.category] || "#eef2f0"}>
         <Image
           src={product.image}
           alt={product.name}
           fill
+          unoptimized
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           style={{ objectFit: "cover" }}
         />
