@@ -5,12 +5,16 @@ import styled from "styled-components";
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.xxl} 0;
+  padding: 3.75rem 0 4.5rem;
+
+  @media (max-width: 640px) {
+    padding: 2.5rem 0 3rem;
+  }
 `;
 
 const Intro = styled.section`
-  max-width: 760px;
-  margin-bottom: ${({ theme }) => theme.spacing.xxl};
+  max-width: 780px;
+  margin-bottom: 3.5rem;
 `;
 
 const Title = styled.h1`
@@ -27,6 +31,7 @@ const Text = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.muted};
   font-size: 1.1rem;
+  line-height: 1.75;
 `;
 
 const Grid = styled.div`
@@ -42,8 +47,9 @@ const Grid = styled.div`
 const Point = styled.article`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.surface};
+  background: rgba(255, 255, 255, 0.72);
   padding: ${({ theme }) => theme.spacing.lg};
+  box-shadow: ${({ theme }) => theme.shadows.soft};
 `;
 
 const PointTitle = styled.h2`
