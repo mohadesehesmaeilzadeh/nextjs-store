@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
-  <title id="title">Ceramic travel mug placeholder</title>
-  <rect width="800" height="600" fill="#eef2f6"/>
-  <circle cx="400" cy="300" r="200" fill="#ffffff"/>
-  <rect x="292" y="180" width="216" height="278" rx="44" fill="#176b87"/>
-  <rect x="274" y="146" width="252" height="54" rx="24" fill="#17202a"/>
-  <path d="M508 262h30c42 0 66 26 66 63s-24 63-66 63h-30" fill="none" stroke="#f4a261" stroke-width="28" stroke-linecap="round"/>
-  <path d="M338 254h124" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
-</svg>

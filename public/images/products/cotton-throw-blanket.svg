@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
-  <title id="title">Cotton throw blanket placeholder</title>
-  <rect width="800" height="600" fill="#f7efe5"/>
-  <circle cx="400" cy="300" r="205" fill="#ffffff"/>
-  <path d="M260 188h268c42 0 70 28 70 70v154H330c-42 0-70-28-70-70z" fill="#f4a261"/>
-  <path d="M330 412V258c0-42-28-70-70-70" fill="none" stroke="#176b87" stroke-width="22" stroke-linecap="round"/>
-  <path d="M392 246h130M392 304h130M392 362h130" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
-</svg>

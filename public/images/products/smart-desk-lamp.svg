@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
-  <title id="title">Smart desk lamp placeholder</title>
-  <rect width="800" height="600" fill="#f7efe5"/>
-  <circle cx="395" cy="285" r="190" fill="#ffffff"/>
-  <path d="M298 212h190l-42 110H340z" fill="#176b87"/>
-  <path d="M395 322v110" stroke="#17202a" stroke-width="24" stroke-linecap="round"/>
-  <path d="M308 452h174" stroke="#17202a" stroke-width="28" stroke-linecap="round"/>
-  <path d="M342 212c18-36 52-58 92-58 34 0 65 17 84 45" fill="none" stroke="#f4a261" stroke-width="22" stroke-linecap="round"/>
-</svg>
