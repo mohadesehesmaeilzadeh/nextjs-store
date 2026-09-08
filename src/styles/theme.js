@@ -1,16 +1,20 @@
 export const theme = {
   colors: {
-    background: "#f6f7f9",
+    background: "#f7f3ee",
+    backgroundAlt: "#eef3f1",
     surface: "#ffffff",
-    text: "#17202a",
-    muted: "#5f6b7a",
-    border: "#dfe4ea",
-    primary: "#176b87",
-    primaryDark: "#0e4d61",
-    accent: "#f4a261",
+    surfaceWarm: "#fffaf4",
+    text: "#1f2523",
+    muted: "#69736f",
+    softText: "#8a6f5a",
+    border: "#e5ded5",
+    primary: "#315f52",
+    primaryDark: "#21483e",
+    accent: "#bd6f45",
+    accentSoft: "#f1dac8",
     success: "#157347",
     danger: "#b42318",
-    focus: "#2f80ed",
+    focus: "#2f6fcb",
   },
   spacing: {
     xs: "0.5rem",
@@ -25,9 +29,10 @@ export const theme = {
     md: "8px",
   },
   shadows: {
-    card: "0 10px 24px rgba(23, 32, 42, 0.08)",
+    card: "0 16px 36px rgba(55, 47, 38, 0.1)",
+    soft: "0 8px 20px rgba(55, 47, 38, 0.07)",
   },
   layout: {
-    maxWidth: "1120px",
+    maxWidth: "1160px",
   },
 };
