@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title id="title">Everyday backpack placeholder</title>
+  <rect width="800" height="600" fill="#edf2ef"/>
+  <circle cx="400" cy="300" r="205" fill="#ffffff"/>
+  <rect x="278" y="170" width="244" height="290" rx="58" fill="#176b87"/>
+  <path d="M322 176c16-42 48-66 78-66s62 24 78 66" fill="none" stroke="#17202a" stroke-width="22" stroke-linecap="round"/>
+  <rect x="320" y="326" width="160" height="92" rx="24" fill="#f4a261"/>
+  <path d="M312 255h176" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title id="title">Bluetooth speaker placeholder</title>
+  <rect width="800" height="600" fill="#f1f3f8"/>
+  <circle cx="400" cy="300" r="205" fill="#ffffff"/>
+  <rect x="210" y="220" width="380" height="190" rx="58" fill="#17202a"/>
+  <circle cx="315" cy="315" r="56" fill="#176b87"/>
+  <circle cx="485" cy="315" r="56" fill="#f4a261"/>
+  <circle cx="315" cy="315" r="24" fill="#ffffff"/>
+  <circle cx="485" cy="315" r="24" fill="#ffffff"/>
+  <path d="M356 251h88" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+</svg>

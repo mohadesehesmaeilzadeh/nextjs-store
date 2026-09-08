@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title id="title">Wireless headphones placeholder</title>
+  <rect width="800" height="600" fill="#e8f3f6"/>
+  <circle cx="400" cy="300" r="210" fill="#ffffff"/>
+  <path d="M250 310v-72c0-86 64-148 150-148s150 62 150 148v72" fill="none" stroke="#176b87" stroke-width="34" stroke-linecap="round"/>
+  <rect x="184" y="280" width="110" height="170" rx="42" fill="#17202a"/>
+  <rect x="506" y="280" width="110" height="170" rx="42" fill="#17202a"/>
+  <rect x="222" y="322" width="34" height="86" rx="17" fill="#f4a261"/>
+  <rect x="544" y="322" width="34" height="86" rx="17" fill="#f4a261"/>
+</svg>
