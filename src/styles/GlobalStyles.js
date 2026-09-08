@@ -15,10 +15,13 @@ const GlobalStyles = createGlobalStyle`
   body {
     min-width: 0;
     margin: 0;
-    background: ${({ theme }) => theme.colors.background};
+    background:
+      radial-gradient(circle at top left, rgba(241, 218, 200, 0.42), transparent 36rem),
+      linear-gradient(180deg, ${({ theme }) => theme.colors.surfaceWarm} 0%, ${({ theme }) => theme.colors.background} 42%);
     color: ${({ theme }) => theme.colors.text};
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.5;
+    font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
   }
 
   img, svg {
