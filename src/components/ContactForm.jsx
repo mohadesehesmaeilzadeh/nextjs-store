@@ -6,7 +6,11 @@ import styled from "styled-components";
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.xxl} 0;
+  padding: 3.75rem 0 4.5rem;
+
+  @media (max-width: 640px) {
+    padding: 2.5rem 0 3rem;
+  }
 `;
 
 const Intro = styled.section`
@@ -28,6 +32,7 @@ const Text = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.muted};
   font-size: 1.1rem;
+  line-height: 1.75;
 `;
 
 const Form = styled.form`
@@ -36,8 +41,9 @@ const Form = styled.form`
   gap: ${({ theme }) => theme.spacing.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.surface};
-  padding: ${({ theme }) => theme.spacing.xl};
+  background: rgba(255, 255, 255, 0.78);
+  padding: 2rem;
+  box-shadow: ${({ theme }) => theme.shadows.soft};
 
   @media (max-width: 520px) {
     padding: ${({ theme }) => theme.spacing.lg};
@@ -50,7 +56,9 @@ const Field = styled.div`
 `;
 
 const Label = styled.label`
-  font-weight: 800;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 0.95rem;
+  font-weight: 750;
 `;
 
 const Input = styled.input`
@@ -59,7 +67,7 @@ const Input = styled.input`
   border: 1px solid
     ${({ theme, $invalid }) =>
       $invalid ? theme.colors.danger : theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.sm};
+  border-radius: 8px;
   padding: 0.75rem;
   color: ${({ theme }) => theme.colors.text};
   background: #ffffff;
@@ -72,7 +80,7 @@ const TextArea = styled.textarea`
   border: 1px solid
     ${({ theme, $invalid }) =>
       $invalid ? theme.colors.danger : theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.sm};
+  border-radius: 8px;
   padding: 0.75rem;
   color: ${({ theme }) => theme.colors.text};
   background: #ffffff;
@@ -95,15 +103,21 @@ const SubmitButton = styled.button`
   min-height: 48px;
   width: fit-content;
   border: 0;
-  border-radius: ${({ theme }) => theme.radii.sm};
+  border-radius: 999px;
   background: ${({ theme }) => theme.colors.primary};
   color: #ffffff;
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1.15rem;
   font-weight: 800;
-  transition: background 160ms ease;
+  box-shadow: 0 10px 20px rgba(49, 95, 82, 0.16);
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 
   &:hover {
     background: ${({ theme }) => theme.colors.primaryDark};
+    box-shadow: 0 14px 26px rgba(49, 95, 82, 0.2);
+    transform: translateY(-1px);
   }
 
   @media (max-width: 520px) {
