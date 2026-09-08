@@ -8,11 +8,19 @@ const MenuButton = styled.button`
   display: none;
   min-height: 44px;
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.sm};
-  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.66);
   color: ${({ theme }) => theme.colors.text};
-  padding: 0.55rem 0.85rem;
-  font-weight: 700;
+  padding: 0.55rem 1rem;
+  font-weight: 750;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.accent};
+    background: ${({ theme }) => theme.colors.surface};
+  }
 
   @media (max-width: 700px) {
     display: inline-flex;
@@ -33,7 +41,7 @@ const Panel = styled.nav`
     flex-direction: column;
     gap: ${({ theme }) => theme.spacing.xs};
     border-top: 1px solid ${({ theme }) => theme.colors.border};
-    background: ${({ theme }) => theme.colors.surface};
+    background: ${({ theme }) => theme.colors.surfaceWarm};
     box-shadow: ${({ theme }) => theme.shadows.card};
     padding: ${({ theme }) => theme.spacing.md}
       max(1rem, calc((100% - ${({ theme }) => theme.layout.maxWidth}) / 2));
@@ -45,7 +53,7 @@ const MobileLink = styled(Link)`
   min-height: 44px;
   align-items: center;
   color: ${({ theme }) => theme.colors.text};
-  font-weight: 700;
+  font-weight: 750;
 `;
 
 export default function MobileMenu() {
