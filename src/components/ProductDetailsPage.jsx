@@ -7,38 +7,54 @@ import styled from "styled-components";
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.xxl} 0;
+  padding: 3.75rem 0 4.5rem;
+
+  @media (max-width: 640px) {
+    padding: 2.5rem 0 3rem;
+  }
 `;
 
 const Detail = styled.article`
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: ${({ theme }) => theme.spacing.xxl};
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.84fr);
+  gap: 3.5rem;
   align-items: center;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 `;
 
 const ImageWrap = styled.div`
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 5 / 4;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radii.md};
-  background: #eef2f6;
+  border: 1px solid rgba(229, 222, 213, 0.9);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.2), transparent),
+    ${({ theme }) => theme.colors.backgroundAlt};
   box-shadow: ${({ theme }) => theme.shadows.card};
 `;
 
 const Content = styled.div`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: 1rem;
+  align-content: center;
 `;
 
 const Category = styled.p`
+  width: fit-content;
   margin: 0;
-  color: ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  color: ${({ theme }) => theme.colors.softText};
+  padding: 0.38rem 0.8rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  text-transform: uppercase;
 `;
 
 const Title = styled.h1`
@@ -53,7 +69,8 @@ const Title = styled.h1`
 
 const Price = styled.p`
   margin: 0;
-  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.primaryDark};
+  font-size: 1.7rem;
   font-weight: 900;
 `;
 
@@ -61,6 +78,7 @@ const Description = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.muted};
   font-size: 1.08rem;
+  line-height: 1.75;
 `;
 
 const BackLink = styled(Link)`
@@ -68,7 +86,8 @@ const BackLink = styled(Link)`
   width: fit-content;
   min-height: 44px;
   align-items: center;
-  color: ${({ theme }) => theme.colors.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.primaryDark};
   font-weight: 800;
 
   &:hover {
@@ -82,8 +101,9 @@ const Empty = styled.section`
   gap: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.surfaceWarm};
   padding: ${({ theme }) => theme.spacing.xl};
+  box-shadow: ${({ theme }) => theme.shadows.soft};
 `;
 
 export default function ProductDetailsPage({ product }) {
@@ -110,6 +130,7 @@ export default function ProductDetailsPage({ product }) {
             src={product.image}
             alt={product.name}
             fill
+            unoptimized
             sizes="(max-width: 800px) 100vw, 50vw"
             style={{ objectFit: "cover" }}
             priority
