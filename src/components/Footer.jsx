@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import styled from "styled-components";
+import Typography from "./ui/Typography/Typography";
 
 const FooterWrap = styled.footer`
   margin-top: 2rem;
@@ -31,13 +32,10 @@ const BrandGroup = styled.div`
   max-width: 460px;
 `;
 
-const Brand = styled.p`
+const Brand = styled(Typography)`
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  margin: 0;
-  font-size: 1.18rem;
-  font-weight: 800;
 
   &::before {
     width: 10px;
@@ -48,16 +46,10 @@ const Brand = styled.p`
   }
 `;
 
-const Tagline = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
-  line-height: 1.7;
-`;
+const Tagline = styled(Typography)``;
 
-const Copyright = styled.p`
-  margin: 0;
+const Copyright = styled(Typography)`
   color: ${({ theme }) => theme.colors.softText};
-  font-size: 0.92rem;
 `;
 
 const FooterNav = styled.div`
@@ -75,12 +67,8 @@ const LinkGroup = styled.nav`
   gap: 0.35rem;
 `;
 
-const GroupTitle = styled.p`
-  margin: 0 0 0.25rem;
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 0.82rem;
-  font-weight: 800;
-  text-transform: uppercase;
+const GroupTitle = styled(Typography)`
+  margin-bottom: 0.25rem;
 `;
 
 const FooterLink = styled(Link)`
@@ -95,35 +83,34 @@ const FooterLink = styled(Link)`
   }
 `;
 
-const PlainText = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
-`;
+const PlainText = styled(Typography)``;
 
 export default function Footer() {
   return (
     <FooterWrap>
       <Inner>
         <BrandGroup>
-          <Brand>NextStore</Brand>
+          <Brand forwardedAs="p" variant="h3">
+            NextStore
+          </Brand>
           <Tagline>
             Everyday products with a softer, more considered shopping
             experience.
           </Tagline>
-          <Copyright>&copy; 2026 NextStore</Copyright>
+          <Copyright variant="bodySmall">&copy; 2026 NextStore</Copyright>
         </BrandGroup>
         <FooterNav>
           <LinkGroup aria-label="Footer navigation">
-            <GroupTitle>Pages</GroupTitle>
+            <GroupTitle variant="caption">Pages</GroupTitle>
             <FooterLink href="/">Store</FooterLink>
             <FooterLink href="/about">About</FooterLink>
             <FooterLink href="/contact">Contact</FooterLink>
           </LinkGroup>
           <LinkGroup aria-label="Store details">
-            <GroupTitle>Store</GroupTitle>
-            <PlainText>Curated essentials</PlainText>
-            <PlainText>Local sample data</PlainText>
-            <PlainText>Real product photos</PlainText>
+            <GroupTitle variant="caption">Store</GroupTitle>
+            <PlainText variant="bodySmall">Curated essentials</PlainText>
+            <PlainText variant="bodySmall">Local sample data</PlainText>
+            <PlainText variant="bodySmall">Real product photos</PlainText>
           </LinkGroup>
         </FooterNav>
       </Inner>
