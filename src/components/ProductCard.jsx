@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
+import Button from "./ui/Button/Button";
+import Typography from "./ui/Typography/Typography";
 
 const Card = styled.article`
   display: flex;
@@ -54,27 +56,11 @@ const Content = styled.div`
   padding: 0 0.2rem 0.15rem;
 `;
 
-const Category = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.softText};
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-`;
+const Category = styled(Typography)``;
 
-const Title = styled.h3`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 1.18rem;
-  line-height: 1.28;
-`;
+const Title = styled(Typography)``;
 
-const Description = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
-  font-size: 0.96rem;
-  line-height: 1.55;
-`;
+const Description = styled(Typography)``;
 
 const PriceRow = styled.div`
   display: flex;
@@ -91,30 +77,7 @@ const Price = styled.p`
   font-weight: 850;
 `;
 
-const ButtonLink = styled(Link)`
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 999px;
-  background: ${({ theme }) => theme.colors.surfaceWarm};
-  color: ${({ theme }) => theme.colors.primaryDark};
-  padding: 0.62rem 0.95rem;
-  font-size: 0.92rem;
-  font-weight: 800;
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
-  white-space: nowrap;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.primary};
-    background: ${({ theme }) => theme.colors.primary};
-    color: #ffffff;
-  }
-`;
+const ButtonLink = styled(Button)``;
 
 const imageTones = {
   Electronics: "#e9f0f1",
@@ -137,12 +100,19 @@ export default function ProductCard({ product }) {
         />
       </ImageWrap>
       <Content>
-        <Category>{product.category}</Category>
-        <Title>{product.name}</Title>
-        <Description>{product.shortDescription}</Description>
+        <Category variant="caption">{product.category}</Category>
+        <Title variant="h3">{product.name}</Title>
+        <Description variant="bodySmall">{product.shortDescription}</Description>
         <PriceRow>
           <Price>${product.price}</Price>
-          <ButtonLink href={`/products/${product.id}`}>View Product</ButtonLink>
+          <ButtonLink
+            forwardedAs={Link}
+            href={`/products/${product.id}`}
+            size="medium"
+            variant="secondary"
+          >
+            View Product
+          </ButtonLink>
         </PriceRow>
       </Content>
     </Card>
