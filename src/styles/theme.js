@@ -27,6 +27,31 @@ export const theme = {
   radii: {
     sm: "6px",
     md: "8px",
+    pill: "999px",
+  },
+  typography: {
+    fontFamily: "\"Inter\", \"Segoe UI\", Arial, Helvetica, sans-serif",
+    sizes: {
+      xs: "0.78rem",
+      sm: "0.92rem",
+      md: "1rem",
+      lg: "1.15rem",
+      xl: "1.35rem",
+      xxl: "2rem",
+      xxxl: "4.15rem",
+    },
+    weights: {
+      regular: 400,
+      medium: 500,
+      semibold: 650,
+      bold: 800,
+      heavy: 900,
+    },
+    lineHeights: {
+      tight: 1.08,
+      normal: 1.5,
+      relaxed: 1.75,
+    },
   },
   shadows: {
     card: "0 16px 36px rgba(55, 47, 38, 0.1)",

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
+import Button from "./ui/Button/Button";
+import Typography from "./ui/Typography/Typography";
 
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
@@ -44,28 +46,15 @@ const Content = styled.div`
   align-content: center;
 `;
 
-const Category = styled.p`
+const Category = styled(Typography)`
   width: fit-content;
-  margin: 0;
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.7);
-  color: ${({ theme }) => theme.colors.softText};
   padding: 0.38rem 0.8rem;
-  font-size: 0.82rem;
-  font-weight: 800;
-  text-transform: uppercase;
 `;
 
-const Title = styled.h1`
-  margin: 0;
-  font-size: 3rem;
-  line-height: 1.08;
-
-  @media (max-width: 640px) {
-    font-size: 2rem;
-  }
-`;
+const Title = styled(Typography)``;
 
 const Price = styled.p`
   margin: 0;
@@ -74,26 +63,11 @@ const Price = styled.p`
   font-weight: 900;
 `;
 
-const Description = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
+const Description = styled(Typography)`
   font-size: 1.08rem;
-  line-height: 1.75;
 `;
 
-const BackLink = styled(Link)`
-  display: inline-flex;
-  width: fit-content;
-  min-height: 44px;
-  align-items: center;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
-  color: ${({ theme }) => theme.colors.primaryDark};
-  font-weight: 800;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.primaryDark};
-  }
-`;
+const BackLink = styled(Button)``;
 
 const Empty = styled.section`
   display: grid;
@@ -111,12 +85,16 @@ export default function ProductDetailsPage({ product }) {
     return (
       <Page>
         <Empty>
-          <Title as="h1">Product not found</Title>
+          <Title forwardedAs="h1" variant="h2">
+            Product not found
+          </Title>
           <Description>
             The product you are looking for does not exist or may have been
             removed.
           </Description>
-          <BackLink href="/">Back to Store</BackLink>
+          <BackLink forwardedAs={Link} href="/" variant="secondary">
+            Back to Store
+          </BackLink>
         </Empty>
       </Page>
     );
@@ -137,11 +115,13 @@ export default function ProductDetailsPage({ product }) {
           />
         </ImageWrap>
         <Content>
-          <Category>{product.category}</Category>
-          <Title>{product.name}</Title>
+          <Category variant="caption">{product.category}</Category>
+          <Title variant="h1">{product.name}</Title>
           <Price>${product.price}</Price>
           <Description>{product.description}</Description>
-          <BackLink href="/">Back to Store</BackLink>
+          <BackLink forwardedAs={Link} href="/" variant="secondary">
+            Back to Store
+          </BackLink>
         </Content>
       </Detail>
     </Page>

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
+import Button from "./ui/Button/Button";
+import Typography from "./ui/Typography/Typography";
 import ProductCard from "./ProductCard";
 
 const Page = styled.div`
@@ -46,25 +48,13 @@ const Eyebrow = styled.p`
   font-weight: 750;
 `;
 
-const Title = styled.h1`
+const Title = styled(Typography)`
   max-width: 720px;
-  margin: 0;
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 4.15rem;
-  line-height: 1.02;
-
-  @media (max-width: 640px) {
-    font-size: 2.45rem;
-    line-height: 1.08;
-  }
 `;
 
-const Intro = styled.p`
+const Intro = styled(Typography)`
   max-width: 610px;
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
   font-size: 1.15rem;
-  line-height: 1.75;
 `;
 
 const Actions = styled.div`
@@ -75,28 +65,7 @@ const Actions = styled.div`
   padding-top: 0.25rem;
 `;
 
-const PrimaryLink = styled.a`
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: #ffffff;
-  padding: 0.85rem 1.15rem;
-  font-weight: 800;
-  box-shadow: 0 10px 20px rgba(49, 95, 82, 0.18);
-  transition:
-    background 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
-    box-shadow: 0 14px 26px rgba(49, 95, 82, 0.22);
-    transform: translateY(-1px);
-  }
-`;
+const PrimaryLink = styled(Button)``;
 
 const SecondaryLink = styled(Link)`
   display: inline-flex;
@@ -208,15 +177,9 @@ const SectionCopy = styled.div`
   gap: 0.35rem;
 `;
 
-const SectionTitle = styled.h2`
-  margin: 0;
-  font-size: 2rem;
-  line-height: 1.15;
-`;
+const SectionTitle = styled(Typography)``;
 
-const SectionIntro = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
+const SectionIntro = styled(Typography)`
   max-width: 560px;
 `;
 
@@ -279,13 +242,15 @@ export default function StorePage({ products }) {
       <Hero>
         <HeroCopy>
           <Eyebrow>Curated everyday essentials</Eyebrow>
-          <Title>Quietly useful pieces for modern daily life.</Title>
+          <Title variant="h1">Quietly useful pieces for modern daily life.</Title>
           <Intro>
             NextStore brings together simple home, tech, and carry goods with a
             calm shopping experience that keeps the focus on the product.
           </Intro>
           <Actions>
-            <PrimaryLink href="#products">Explore Products</PrimaryLink>
+            <PrimaryLink forwardedAs="a" href="#products" size="large">
+              Explore Products
+            </PrimaryLink>
             <SecondaryLink href="/about">About the Store</SecondaryLink>
           </Actions>
         </HeroCopy>
@@ -328,7 +293,9 @@ export default function StorePage({ products }) {
         <SectionHeader>
           <SectionCopy>
             <Eyebrow as="p">Featured collection</Eyebrow>
-            <SectionTitle id="products-title">Shop the edit</SectionTitle>
+            <SectionTitle id="products-title" variant="h2">
+              Shop the edit
+            </SectionTitle>
             <SectionIntro>
               A compact selection of everyday goods with clean lines, useful
               details, and warm materials.

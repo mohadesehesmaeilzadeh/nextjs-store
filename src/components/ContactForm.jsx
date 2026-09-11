@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import styled from "styled-components";
+import Button from "./ui/Button/Button";
+import Input from "./ui/Input/Input";
+import Textarea from "./ui/Textarea/Textarea";
+import Typography from "./ui/Typography/Typography";
 
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
@@ -18,21 +22,12 @@ const Intro = styled.section`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
-const Title = styled.h1`
-  margin: 0 0 ${({ theme }) => theme.spacing.md};
-  font-size: 3rem;
-  line-height: 1.1;
-
-  @media (max-width: 640px) {
-    font-size: 2rem;
-  }
+const Title = styled(Typography)`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
-const Text = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
+const Text = styled(Typography)`
   font-size: 1.1rem;
-  line-height: 1.75;
 `;
 
 const Form = styled.form`
@@ -50,76 +45,12 @@ const Form = styled.form`
   }
 `;
 
-const Field = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing.xs};
-`;
-
-const Label = styled.label`
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 0.95rem;
-  font-weight: 750;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  min-height: 48px;
-  border: 1px solid
-    ${({ theme, $invalid }) =>
-      $invalid ? theme.colors.danger : theme.colors.border};
-  border-radius: 8px;
-  padding: 0.75rem;
-  color: ${({ theme }) => theme.colors.text};
-  background: #ffffff;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  min-height: 150px;
-  resize: vertical;
-  border: 1px solid
-    ${({ theme, $invalid }) =>
-      $invalid ? theme.colors.danger : theme.colors.border};
-  border-radius: 8px;
-  padding: 0.75rem;
-  color: ${({ theme }) => theme.colors.text};
-  background: #ffffff;
-`;
-
-const ErrorText = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.danger};
-  font-size: 0.92rem;
-  font-weight: 700;
-`;
-
-const SuccessText = styled.p`
-  margin: 0;
+const SuccessText = styled(Typography)`
   color: ${({ theme }) => theme.colors.success};
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.typography.weights.bold};
 `;
 
-const SubmitButton = styled.button`
-  min-height: 48px;
-  width: fit-content;
-  border: 0;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: #ffffff;
-  padding: 0.8rem 1.15rem;
-  font-weight: 800;
-  box-shadow: 0 10px 20px rgba(49, 95, 82, 0.16);
-  transition:
-    background 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
-    box-shadow: 0 14px 26px rgba(49, 95, 82, 0.2);
-    transform: translateY(-1px);
-  }
-
+const SubmitButton = styled(Button)`
   @media (max-width: 520px) {
     width: 100%;
   }
@@ -185,7 +116,7 @@ export default function ContactForm() {
   return (
     <Page>
       <Intro>
-        <Title>Contact Us</Title>
+        <Title variant="h1">Contact Us</Title>
         <Text>
           Send a message about a product, the sample store, or anything you
           would like to improve in this beginner project.
@@ -193,56 +124,43 @@ export default function ContactForm() {
       </Intro>
 
       <Form onSubmit={handleSubmit} noValidate>
-        {success ? <SuccessText role="status">{success}</SuccessText> : null}
+        {success ? (
+          <SuccessText role="status" variant="body">
+            {success}
+          </SuccessText>
+        ) : null}
 
-        <Field>
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            aria-invalid={Boolean(errors.name)}
-            aria-describedby={errors.name ? "name-error" : undefined}
-            $invalid={Boolean(errors.name)}
-          />
-          {errors.name ? <ErrorText id="name-error">{errors.name}</ErrorText> : null}
-        </Field>
+        <Input
+          error={errors.name}
+          label="Name"
+          name="name"
+          onChange={handleChange}
+          required
+          value={form.name}
+        />
 
-        <Field>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "email-error" : undefined}
-            $invalid={Boolean(errors.email)}
-          />
-          {errors.email ? (
-            <ErrorText id="email-error">{errors.email}</ErrorText>
-          ) : null}
-        </Field>
+        <Input
+          error={errors.email}
+          label="Email"
+          name="email"
+          onChange={handleChange}
+          required
+          type="email"
+          value={form.email}
+        />
 
-        <Field>
-          <Label htmlFor="message">Message</Label>
-          <TextArea
-            id="message"
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            aria-invalid={Boolean(errors.message)}
-            aria-describedby={errors.message ? "message-error" : undefined}
-            $invalid={Boolean(errors.message)}
-          />
-          {errors.message ? (
-            <ErrorText id="message-error">{errors.message}</ErrorText>
-          ) : null}
-        </Field>
+        <Textarea
+          error={errors.message}
+          label="Message"
+          name="message"
+          onChange={handleChange}
+          required
+          value={form.message}
+        />
 
-        <SubmitButton type="submit">Send Message</SubmitButton>
+        <SubmitButton size="large" type="submit">
+          Send Message
+        </SubmitButton>
       </Form>
     </Page>
   );

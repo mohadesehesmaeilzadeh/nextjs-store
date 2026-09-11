@@ -19,7 +19,7 @@ const GlobalStyles = createGlobalStyle`
       radial-gradient(circle at top left, rgba(241, 218, 200, 0.42), transparent 36rem),
       linear-gradient(180deg, ${({ theme }) => theme.colors.surfaceWarm} 0%, ${({ theme }) => theme.colors.background} 42%);
     color: ${({ theme }) => theme.colors.text};
-    font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
+    font-family: ${({ theme }) => theme.typography.fontFamily};
     line-height: 1.65;
     text-rendering: optimizeLegibility;
   }

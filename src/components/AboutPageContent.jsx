@@ -1,6 +1,7 @@
 "use client";
 
 import styled from "styled-components";
+import Typography from "./ui/Typography/Typography";
 
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
@@ -17,21 +18,12 @@ const Intro = styled.section`
   margin-bottom: 3.5rem;
 `;
 
-const Title = styled.h1`
-  margin: 0 0 ${({ theme }) => theme.spacing.md};
-  font-size: 3rem;
-  line-height: 1.1;
-
-  @media (max-width: 640px) {
-    font-size: 2rem;
-  }
+const Title = styled(Typography)`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
-const Text = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
+const Text = styled(Typography)`
   font-size: 1.1rem;
-  line-height: 1.75;
 `;
 
 const Grid = styled.div`
@@ -52,15 +44,11 @@ const Point = styled.article`
   box-shadow: ${({ theme }) => theme.shadows.soft};
 `;
 
-const PointTitle = styled.h2`
-  margin: 0 0 ${({ theme }) => theme.spacing.sm};
-  font-size: 1.2rem;
+const PointTitle = styled(Typography)`
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
-const PointText = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.muted};
-`;
+const PointText = styled(Typography)``;
 
 const points = [
   {
@@ -81,7 +69,7 @@ export default function AboutPageContent() {
   return (
     <Page>
       <Intro>
-        <Title>About NextStore</Title>
+        <Title variant="h1">About NextStore</Title>
         <Text>
           NextStore is a beginner-friendly online store project built to show how
           Next.js pages, routes, components, props, local data, and
@@ -90,13 +78,13 @@ export default function AboutPageContent() {
       </Intro>
 
       <section aria-labelledby="why-title">
-        <Title as="h2" id="why-title">
+        <Title forwardedAs="h2" id="why-title" variant="h2">
           Why Choose Us
         </Title>
         <Grid>
           {points.map((point) => (
             <Point key={point.title}>
-              <PointTitle>{point.title}</PointTitle>
+              <PointTitle variant="h3">{point.title}</PointTitle>
               <PointText>{point.text}</PointText>
             </Point>
           ))}
