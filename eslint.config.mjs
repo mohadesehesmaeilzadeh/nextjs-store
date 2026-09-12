@@ -5,9 +5,10 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   globalIgnores([
     ".next/**",
+    "**/storybook-static/**",
+    "nextjs-store/**",
     "out/**",
     "build/**",
-    "storybook-static/**",
     "next-env.d.ts",
   ]),
 ]);
