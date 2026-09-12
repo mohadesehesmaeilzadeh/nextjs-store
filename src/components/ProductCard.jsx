@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
+import AddToCartButton from "./cart/AddToCartButton";
 import Button from "./ui/Button/Button";
 import Typography from "./ui/Typography/Typography";
 
@@ -47,6 +47,12 @@ const ImageWrap = styled.div`
   }
 `;
 
+const ProductImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
 const Content = styled.div`
   display: flex;
   min-width: 0;
@@ -62,19 +68,34 @@ const Title = styled(Typography)``;
 
 const Description = styled(Typography)``;
 
-const PriceRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-top: auto;
-`;
-
 const Price = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.text};
   font-size: 1.18rem;
   font-weight: 850;
+`;
+
+const Actions = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: ${({ theme }) => theme.spacing.sm};
+  align-items: center;
+  margin-top: auto;
+
+  @media (max-width: 440px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.xs};
+  justify-content: flex-end;
+
+  @media (max-width: 440px) {
+    justify-content: flex-start;
+  }
 `;
 
 const ButtonLink = styled(Button)``;
@@ -90,30 +111,28 @@ export default function ProductCard({ product }) {
   return (
     <Card>
       <ImageWrap $tone={imageTones[product.category] || "#eef2f0"}>
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          unoptimized
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          style={{ objectFit: "cover" }}
-        />
+        <ProductImage src={product.image} alt={product.name} loading="lazy" />
       </ImageWrap>
       <Content>
         <Category variant="caption">{product.category}</Category>
         <Title variant="h3">{product.name}</Title>
         <Description variant="bodySmall">{product.shortDescription}</Description>
-        <PriceRow>
+        <Actions>
           <Price>${product.price}</Price>
-          <ButtonLink
-            forwardedAs={Link}
-            href={`/products/${product.id}`}
-            size="medium"
-            variant="secondary"
-          >
-            View Product
-          </ButtonLink>
-        </PriceRow>
+          <ButtonGroup>
+            <ButtonLink
+              forwardedAs={Link}
+              href={`/products/${product.id}`}
+              size="small"
+              variant="secondary"
+            >
+              View
+            </ButtonLink>
+            <AddToCartButton product={product} size="small">
+              Add
+            </AddToCartButton>
+          </ButtonGroup>
+        </Actions>
       </Content>
     </Card>
   );
