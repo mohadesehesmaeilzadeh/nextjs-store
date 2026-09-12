@@ -56,7 +56,7 @@ const MobileLink = styled(Link)`
   font-weight: 750;
 `;
 
-export default function MobileMenu() {
+export default function MobileMenu({ cartCount = 0 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   function closeMenu() {
@@ -82,6 +82,9 @@ export default function MobileMenu() {
         </MobileLink>
         <MobileLink href="/contact" onClick={closeMenu}>
           Contact
+        </MobileLink>
+        <MobileLink href="/cart" onClick={closeMenu}>
+          Cart ({cartCount})
         </MobileLink>
       </Panel>
     </>
