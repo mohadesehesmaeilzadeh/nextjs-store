@@ -1,8 +1,22 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect } from "react";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import {
+  clearSelectedProduct,
+  fetchProductById,
+  selectProducts,
+  selectSelectedProduct,
+  selectSelectedProductError,
+  selectSelectedProductStatus,
+} from "../store/slices/productsSlice";
+import {
+  ErrorState,
+  LoadingState,
+} from "./ui/AsyncState/AsyncState";
+import AddToCartButton from "./cart/AddToCartButton";
 import Button from "./ui/Button/Button";
 import Typography from "./ui/Typography/Typography";
 
@@ -29,15 +43,20 @@ const Detail = styled.article`
 `;
 
 const ImageWrap = styled.div`
-  position: relative;
   aspect-ratio: 5 / 4;
   overflow: hidden;
-  border-radius: ${({ theme }) => theme.radii.md};
   border: 1px solid rgba(229, 222, 213, 0.9);
+  border-radius: ${({ theme }) => theme.radii.md};
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.2), transparent),
     ${({ theme }) => theme.colors.backgroundAlt};
   box-shadow: ${({ theme }) => theme.shadows.card};
+`;
+
+const ProductImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const Content = styled.div`
@@ -67,6 +86,12 @@ const Description = styled(Typography)`
   font-size: 1.08rem;
 `;
 
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.sm};
+`;
+
 const BackLink = styled(Button)``;
 
 const Empty = styled.section`
@@ -80,8 +105,46 @@ const Empty = styled.section`
   box-shadow: ${({ theme }) => theme.shadows.soft};
 `;
 
-export default function ProductDetailsPage({ product }) {
-  if (!product) {
+export default function ProductDetailsPage({ productId }) {
+  const dispatch = useDispatch();
+  const products = useSelector(selectProducts);
+  const selectedProduct = useSelector(selectSelectedProduct);
+  const selectedStatus = useSelector(selectSelectedProductStatus);
+  const selectedError = useSelector(selectSelectedProductError);
+  const productFromList = products.find((item) => String(item.id) === productId);
+  const product =
+    productFromList ||
+    (selectedProduct && String(selectedProduct.id) === productId
+      ? selectedProduct
+      : null);
+
+  useEffect(() => {
+    if (!productFromList) {
+      dispatch(clearSelectedProduct());
+      dispatch(fetchProductById(productId));
+    }
+  }, [dispatch, productFromList, productId]);
+
+  if (!product && selectedStatus === "loading") {
+    return (
+      <Page>
+        <LoadingState message="Loading product..." />
+      </Page>
+    );
+  }
+
+  if (!product && selectedStatus === "failed") {
+    return (
+      <Page>
+        <ErrorState
+          message={selectedError || "Unable to load this product."}
+          onRetry={() => dispatch(fetchProductById(productId))}
+        />
+      </Page>
+    );
+  }
+
+  if (!product && selectedStatus === "succeeded") {
     return (
       <Page>
         <Empty>
@@ -100,28 +163,33 @@ export default function ProductDetailsPage({ product }) {
     );
   }
 
+  if (!product) {
+    return (
+      <Page>
+        <LoadingState message="Loading product..." />
+      </Page>
+    );
+  }
+
   return (
     <Page>
       <Detail>
         <ImageWrap>
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            unoptimized
-            sizes="(max-width: 800px) 100vw, 50vw"
-            style={{ objectFit: "cover" }}
-            priority
-          />
+          <ProductImage src={product.image} alt={product.name} />
         </ImageWrap>
         <Content>
           <Category variant="caption">{product.category}</Category>
           <Title variant="h1">{product.name}</Title>
           <Price>${product.price}</Price>
           <Description>{product.description}</Description>
-          <BackLink forwardedAs={Link} href="/" variant="secondary">
-            Back to Store
-          </BackLink>
+          <Actions>
+            <AddToCartButton product={product}>
+              Add to Cart
+            </AddToCartButton>
+            <BackLink forwardedAs={Link} href="/" variant="secondary">
+              Back to Store
+            </BackLink>
+          </Actions>
         </Content>
       </Detail>
     </Page>
