@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { selectCartCount } from "../store/slices/cartSlice";
 import MobileMenu from "./MobileMenu";
 
 const HeaderWrap = styled.header`
@@ -76,6 +78,7 @@ const NavLink = styled(Link)`
 
 export default function Header() {
   const pathname = usePathname();
+  const cartCount = useSelector(selectCartCount);
 
   return (
     <HeaderWrap>
@@ -91,8 +94,11 @@ export default function Header() {
           <NavLink href="/contact" $active={pathname === "/contact"}>
             Contact
           </NavLink>
+          <NavLink href="/cart" $active={pathname === "/cart"}>
+            Cart ({cartCount})
+          </NavLink>
         </DesktopNav>
-        <MobileMenu />
+        <MobileMenu cartCount={cartCount} />
       </Bar>
     </HeaderWrap>
   );

@@ -1,4 +1,5 @@
 import { ThemeProvider } from "styled-components";
+import StoreProvider from "../src/store/StoreProvider";
 import GlobalStyles from "../src/styles/GlobalStyles";
 import { theme } from "../src/styles/theme";
 
@@ -6,10 +7,12 @@ import { theme } from "../src/styles/theme";
 const preview = {
   decorators: [
     (Story) => (
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <Story />
-      </ThemeProvider>
+      <StoreProvider>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          <Story />
+        </ThemeProvider>
+      </StoreProvider>
     ),
   ],
   parameters: {
