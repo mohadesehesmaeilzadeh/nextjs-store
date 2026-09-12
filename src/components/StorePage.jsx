@@ -1,8 +1,20 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect } from "react";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import {
+  fetchProducts,
+  selectProducts,
+  selectProductsError,
+  selectProductsStatus,
+} from "../store/slices/productsSlice";
+import {
+  EmptyState,
+  ErrorState,
+  LoadingState,
+} from "./ui/AsyncState/AsyncState";
 import Button from "./ui/Button/Button";
 import Typography from "./ui/Typography/Typography";
 import ProductCard from "./ProductCard";
@@ -132,6 +144,12 @@ const StackedImage = styled.div`
   box-shadow: 0 18px 34px rgba(55, 47, 38, 0.13);
 `;
 
+const ProductImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
 const VisualNote = styled.div`
   position: absolute;
   left: 8%;
@@ -225,17 +243,23 @@ const Grid = styled.div`
   }
 `;
 
-const Empty = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.surface};
-  padding: ${({ theme }) => theme.spacing.xl};
-  color: ${({ theme }) => theme.colors.muted};
-`;
-
-export default function StorePage({ products }) {
+export default function StorePage() {
+  const dispatch = useDispatch();
+  const products = useSelector(selectProducts);
+  const status = useSelector(selectProductsStatus);
+  const error = useSelector(selectProductsError);
   const featured = products[0];
   const secondary = products[2] || products[0];
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, status]);
+
+  function retryProducts() {
+    dispatch(fetchProducts());
+  }
 
   return (
     <Page>
@@ -258,25 +282,10 @@ export default function StorePage({ products }) {
         {featured ? (
           <HeroVisual aria-label="Featured NextStore products">
             <FeaturedImage>
-              <Image
-                src={featured.image}
-                alt={featured.name}
-                fill
-                unoptimized
-                sizes="(max-width: 880px) 70vw, 34vw"
-                style={{ objectFit: "cover" }}
-                priority
-              />
+              <ProductImage src={featured.image} alt={featured.name} />
             </FeaturedImage>
             <StackedImage>
-              <Image
-                src={secondary.image}
-                alt={secondary.name}
-                fill
-                unoptimized
-                sizes="(max-width: 880px) 45vw, 24vw"
-                style={{ objectFit: "cover" }}
-              />
+              <ProductImage src={secondary.image} alt={secondary.name} />
             </StackedImage>
             <VisualNote>
               <p>
@@ -304,15 +313,30 @@ export default function StorePage({ products }) {
           <Count>{products.length} products</Count>
         </SectionHeader>
 
+        {status === "loading" ? (
+          <LoadingState message="Loading products..." />
+        ) : null}
+
+        {status === "failed" ? (
+          <ErrorState
+            message={error || "Unable to load products."}
+            onRetry={retryProducts}
+          />
+        ) : null}
+
+        {status === "succeeded" && products.length === 0 ? (
+          <EmptyState title="No products are available.">
+            Please check back soon for new arrivals.
+          </EmptyState>
+        ) : null}
+
         {products.length > 0 ? (
           <Grid>
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </Grid>
-        ) : (
-          <Empty>No products are available right now.</Empty>
-        )}
+        ) : null}
       </section>
     </Page>
   );
