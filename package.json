@@ -7,6 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "node scripts/run-e2e.js",
+    "test:e2e:ui": "node scripts/run-e2e.js --ui",
+    "test:all": "npm test && npm run test:e2e",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -19,10 +25,16 @@
     "styled-components": "^6.5.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/nextjs-vite": "^10.6.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "jest": "^30.5.1",
+    "jest-environment-jsdom": "^30.5.1",
     "storybook": "^10.6.0"
   }
 }
