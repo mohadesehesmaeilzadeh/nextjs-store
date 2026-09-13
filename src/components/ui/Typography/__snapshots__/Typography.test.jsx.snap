@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Typography matches the stable typography snapshot 1`] = `
+<div>
+  <h2
+    class="sc-63f1fb9a-0 eIBNpn"
+  >
+    Shop the edit
+  </h2>
+</div>
+`;
