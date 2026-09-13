@@ -105,6 +105,9 @@ export default function MobileMenu({
         <MobileLink href="/contact" onClick={closeMenu}>
           Contact
         </MobileLink>
+        <MobileLink href="/news" onClick={closeMenu}>
+          News
+        </MobileLink>
         <MobileLink href="/cart" onClick={closeMenu}>
           Cart ({cartCount})
         </MobileLink>
