@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ProductCard matches the stable product card snapshot 1`] = `
+<div>
+  <article
+    class="sc-4cebc19e-0 hbcESJ"
+  >
+    <div
+      class="sc-4cebc19e-1 gEJOsM"
+    >
+      <img
+        alt="Wireless Headphones"
+        class="sc-4cebc19e-2 bXVHOV"
+        loading="lazy"
+        src="/images/products/wireless-headphones.jpg"
+      />
+    </div>
+    <div
+      class="sc-4cebc19e-3 SdOXl"
+    >
+      <span
+        class="sc-63f1fb9a-0 bHOsFq sc-4cebc19e-4"
+      >
+        Electronics
+      </span>
+      <h3
+        class="sc-63f1fb9a-0 zAVdG sc-4cebc19e-5"
+      >
+        Wireless Headphones
+      </h3>
+      <p
+        class="sc-63f1fb9a-0 eKUtZG sc-4cebc19e-6"
+      >
+        Comfortable wireless headphones for work and travel.
+      </p>
+      <div
+        class="sc-4cebc19e-8 ihvLLg"
+      >
+        <p
+          class="sc-4cebc19e-7 jezLor"
+        >
+          $
+          89
+        </p>
+        <div
+          class="sc-4cebc19e-9 bMYjGY"
+        >
+          <a
+            class="sc-172dac95-0 hiFfnC sc-4cebc19e-10"
+            href="/products/1"
+          >
+            View
+          </a>
+          <button
+            class="sc-172dac95-0 dIzGyV"
+            type="button"
+          >
+            Add
+          </button>
+          <span
+            aria-live="polite"
+            class="sc-b25a71b8-0 gwyUCW"
+            role="status"
+          />
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;

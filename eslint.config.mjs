@@ -5,6 +5,9 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   globalIgnores([
     ".next/**",
+    "coverage/**",
+    "playwright-report/**",
+    "test-results/**",
     "**/storybook-static/**",
     "nextjs-store/**",
     "out/**",
