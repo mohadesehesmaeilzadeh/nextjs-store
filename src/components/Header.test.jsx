@@ -23,6 +23,10 @@ describe("Header", () => {
       "href",
       "/contact",
     );
+    expect(within(nav).getByRole("link", { name: /news/i })).toHaveAttribute(
+      "href",
+      "/news",
+    );
     expect(within(nav).getByRole("link", { name: /cart \(0\)/i })).toHaveAttribute(
       "href",
       "/cart",
