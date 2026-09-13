@@ -1,0 +1,142 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+import Button from "./ui/Button/Button";
+import Input from "./ui/Input/Input";
+import Typography from "./ui/Typography/Typography";
+
+const Page = styled.div`
+  width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
+  margin: 0 auto;
+  padding: 3.75rem 0 4.5rem;
+`;
+
+const Intro = styled.section`
+  max-width: 680px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+`;
+
+const Title = styled(Typography)`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`;
+
+const Text = styled(Typography)`
+  font-size: 1.08rem;
+`;
+
+const Form = styled.form`
+  display: grid;
+  max-width: 520px;
+  gap: ${({ theme }) => theme.spacing.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radii.md};
+  background: rgba(255, 255, 255, 0.78);
+  padding: 2rem;
+  box-shadow: ${({ theme }) => theme.shadows.soft};
+`;
+
+const ErrorText = styled(Typography)`
+  color: ${({ theme }) => theme.colors.danger};
+  font-weight: ${({ theme }) => theme.typography.weights.bold};
+`;
+
+const HelpText = styled(Typography)`
+  color: ${({ theme }) => theme.colors.softText};
+`;
+
+export default function LoginForm() {
+  const router = useRouter();
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setValues((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Unable to sign in.");
+      }
+
+      router.push("/");
+      router.refresh();
+    } catch (nextError) {
+      setError(nextError.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <Page>
+      <Intro>
+        <Title variant="h1">Login</Title>
+        <Text>
+          Sign in to the demo customer account to view protected store pages.
+        </Text>
+      </Intro>
+
+      <Form onSubmit={handleSubmit} noValidate>
+        {error ? (
+          <ErrorText role="alert" variant="body">
+            {error}
+          </ErrorText>
+        ) : null}
+
+        <Input
+          autoComplete="email"
+          disabled={isLoading}
+          label="Email"
+          name="email"
+          onChange={handleChange}
+          required
+          type="email"
+          value={values.email}
+        />
+        <Input
+          autoComplete="current-password"
+          disabled={isLoading}
+          label="Password"
+          name="password"
+          onChange={handleChange}
+          required
+          type="password"
+          value={values.password}
+        />
+
+        <HelpText variant="bodySmall">
+          Demo email: demo@nextstore.test. Password: any 8+ characters.
+        </HelpText>
+
+        <Button disabled={isLoading} size="large" type="submit">
+          {isLoading ? "Signing in..." : "Sign In"}
+        </Button>
+      </Form>
+    </Page>
+  );
+}
