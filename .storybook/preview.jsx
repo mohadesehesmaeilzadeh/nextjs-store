@@ -1,4 +1,6 @@
+import { ApolloProvider } from "@apollo/client/react";
 import { ThemeProvider } from "styled-components";
+import apolloClient from "../src/lib/apolloClient";
 import StoreProvider from "../src/store/StoreProvider";
 import GlobalStyles from "../src/styles/GlobalStyles";
 import { theme } from "../src/styles/theme";
@@ -8,10 +10,12 @@ const preview = {
   decorators: [
     (Story) => (
       <StoreProvider>
-        <ThemeProvider theme={theme}>
-          <GlobalStyles />
-          <Story />
-        </ThemeProvider>
+        <ApolloProvider client={apolloClient}>
+          <ThemeProvider theme={theme}>
+            <GlobalStyles />
+            <Story />
+          </ThemeProvider>
+        </ApolloProvider>
       </StoreProvider>
     ),
   ],
