@@ -123,6 +123,56 @@ npm run lint
 
 Runs ESLint.
 
+## Testing
+
+This project uses Jest with React Testing Library for unit, DOM/component,
+integration, and snapshot tests. Playwright is used only for End-to-End browser
+tests.
+
+Run the Jest suite:
+
+```bash
+npm test
+```
+
+Run Jest in watch mode:
+
+```bash
+npm run test:watch
+```
+
+Generate coverage:
+
+```bash
+npm run test:coverage
+```
+
+Run Playwright End-to-End tests:
+
+```bash
+npm run test:e2e
+```
+
+Open Playwright's interactive UI:
+
+```bash
+npm run test:e2e:ui
+```
+
+Run Jest and Playwright together:
+
+```bash
+npm run test:all
+```
+
+Snapshot tests are intentionally limited to stable reusable components. When a
+component output is intentionally changed, review the diff and update snapshots
+with:
+
+```bash
+npm test -- -u
+```
+
 ## Product Data
 
 Products are stored in:
