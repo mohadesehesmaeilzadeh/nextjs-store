@@ -7,6 +7,7 @@ jest.mock("next/navigation", () => ({
     back: jest.fn(),
     prefetch: jest.fn(),
     push: jest.fn(),
+    refresh: jest.fn(),
     replace: jest.fn(),
   })),
 }));
