@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { selectCartCount } from "../store/slices/cartSlice";
@@ -76,9 +77,49 @@ const NavLink = styled(Link)`
       : ""}
 `;
 
-export default function Header() {
+const NavButton = styled.button`
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.muted};
+  padding: 0;
+  font: inherit;
+  font-weight: 650;
+  transition: color 160ms ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+`;
+
+export default function Header({ initialSession = null }) {
   const pathname = usePathname();
+  const router = useRouter();
   const cartCount = useSelector(selectCartCount);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const isAuthenticated = Boolean(initialSession);
+
+  async function handleLogout() {
+    setIsLoggingOut(true);
+
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+    } finally {
+      setIsLoggingOut(false);
+      router.push("/login");
+      router.refresh();
+    }
+  }
 
   return (
     <HeaderWrap>
@@ -97,8 +138,31 @@ export default function Header() {
           <NavLink href="/cart" $active={pathname === "/cart"}>
             Cart ({cartCount})
           </NavLink>
+          {isAuthenticated ? (
+            <>
+              <NavLink href="/account" $active={pathname === "/account"}>
+                Account
+              </NavLink>
+              <NavButton
+                type="button"
+                disabled={isLoggingOut}
+                onClick={handleLogout}
+              >
+                {isLoggingOut ? "Logging out..." : "Logout"}
+              </NavButton>
+            </>
+          ) : (
+            <NavLink href="/login" $active={pathname === "/login"}>
+              Login
+            </NavLink>
+          )}
         </DesktopNav>
-        <MobileMenu cartCount={cartCount} />
+        <MobileMenu
+          cartCount={cartCount}
+          isAuthenticated={isAuthenticated}
+          isLoggingOut={isLoggingOut}
+          onLogout={handleLogout}
+        />
       </Bar>
     </HeaderWrap>
   );

@@ -1,6 +1,15 @@
 import { expect, test } from "@playwright/test";
 import { products } from "../../src/data/products";
 
+async function signIn(page) {
+  await page.goto("/login");
+  await page.getByLabel(/email/i).fill("demo@nextstore.test");
+  await page.getByLabel(/password/i).fill("password123");
+  await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(page).toHaveURL("/");
+  await expect(page.getByRole("button", { name: /logout/i })).toBeVisible();
+}
+
 test("store homepage loads products and supports add to cart", async ({ page }) => {
   await page.goto("/");
 
@@ -98,6 +107,67 @@ test("contact form validates and submits from the user perspective", async ({
   await expect(page.getByLabel(/name/i)).toHaveValue("");
   await expect(page.getByLabel(/email/i)).toHaveValue("");
   await expect(page.getByLabel(/message/i)).toHaveValue("");
+});
+
+test("invalid login shows an error", async ({ page }) => {
+  await page.goto("/login");
+
+  await page.getByLabel(/email/i).fill("wrong@example.com");
+  await page.getByLabel(/password/i).fill("short");
+  await page.getByRole("button", { name: /sign in/i }).click();
+
+  await expect(page.getByText(/invalid login/i)).toBeVisible();
+  await expect(page).toHaveURL("/login");
+});
+
+test("login succeeds and survives refresh", async ({ page }) => {
+  await signIn(page);
+
+  await expect(page.getByRole("link", { name: /account/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /login/i })).toHaveCount(0);
+
+  await page.reload();
+
+  await expect(page.getByRole("button", { name: /logout/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /account/i })).toBeVisible();
+});
+
+test("protected account page redirects logged-out users to login", async ({
+  page,
+}) => {
+  await page.goto("/account");
+
+  await expect(page).toHaveURL("/login");
+  await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
+});
+
+test("logged-in users can view account details", async ({ page }) => {
+  await signIn(page);
+
+  await page.getByRole("link", { name: /account/i }).click();
+
+  await expect(page).toHaveURL("/account");
+  await expect(page.getByRole("heading", { name: /account/i })).toBeVisible();
+  await expect(page.getByText("Demo Customer")).toBeVisible();
+  await expect(page.getByText("demo@nextstore.test")).toBeVisible();
+});
+
+test("logout clears the session and stays logged out after refresh", async ({
+  page,
+}) => {
+  await signIn(page);
+
+  await page.getByRole("button", { name: /logout/i }).click();
+
+  await expect(page).toHaveURL("/login");
+  await expect(page.getByRole("link", { name: /login/i })).toBeVisible();
+
+  await page.reload();
+
+  await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+
+  await page.goto("/account");
+  await expect(page).toHaveURL("/login");
 });
 
 test("cart and checkout flow reaches success", async ({ page }) => {

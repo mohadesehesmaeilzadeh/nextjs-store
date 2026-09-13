@@ -17,12 +17,30 @@ describe("MobileMenu", () => {
     await user.click(button);
 
     expect(button).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByRole("link", { name: /cart \(3\)/i, hidden: true }),
-    ).toHaveAttribute("href", "/cart");
+    expect(screen.getByText("Cart (3)").closest("a")).toHaveAttribute("href", "/cart");
+    expect(screen.getByText("Login").closest("a")).toHaveAttribute("href", "/login");
 
     await user.click(screen.getByRole("link", { name: /about/i, hidden: true }));
     expect(button).toHaveAttribute("aria-expanded", "false");
     expect(nav).toBeInTheDocument();
+  });
+
+  it("shows account and logout actions for authenticated users", async () => {
+    const user = userEvent.setup();
+    const onLogout = jest.fn();
+
+    renderWithProviders(
+      <MobileMenu cartCount={1} isAuthenticated onLogout={onLogout} />,
+    );
+
+    await user.click(screen.getByText("Menu"));
+
+    expect(screen.getByText("Account").closest("a")).toHaveAttribute(
+      "href",
+      "/account",
+    );
+
+    await user.click(screen.getByText("Logout"));
+    expect(onLogout).toHaveBeenCalledTimes(1);
   });
 });

@@ -56,7 +56,29 @@ const MobileLink = styled(Link)`
   font-weight: 750;
 `;
 
-export default function MobileMenu({ cartCount = 0 }) {
+const MobileButton = styled.button`
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.text};
+  padding: 0;
+  font: inherit;
+  font-weight: 750;
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+`;
+
+export default function MobileMenu({
+  cartCount = 0,
+  isAuthenticated = false,
+  isLoggingOut = false,
+  onLogout,
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   function closeMenu() {
@@ -86,6 +108,27 @@ export default function MobileMenu({ cartCount = 0 }) {
         <MobileLink href="/cart" onClick={closeMenu}>
           Cart ({cartCount})
         </MobileLink>
+        {isAuthenticated ? (
+          <>
+            <MobileLink href="/account" onClick={closeMenu}>
+              Account
+            </MobileLink>
+            <MobileButton
+              type="button"
+              disabled={isLoggingOut}
+              onClick={() => {
+                closeMenu();
+                onLogout?.();
+              }}
+            >
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </MobileButton>
+          </>
+        ) : (
+          <MobileLink href="/login" onClick={closeMenu}>
+            Login
+          </MobileLink>
+        )}
       </Panel>
     </>
   );
