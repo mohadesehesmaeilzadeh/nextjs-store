@@ -3,7 +3,6 @@
 import { useQuery } from "@apollo/client/react";
 import styled from "styled-components";
 import { GET_NEWS } from "../../graphql/news";
-import { fakeqlEndpoint } from "../../lib/apolloClient";
 import {
   EmptyState,
   ErrorState,
@@ -61,14 +60,9 @@ function getNewsItems(data) {
   return Array.isArray(data?.news) ? data.news : [];
 }
 
-export default function NewsList({
-  endpointReady = Boolean(fakeqlEndpoint),
-  pollInterval = 0,
-}) {
-  const hasEndpoint = endpointReady;
+export default function NewsList({ pollInterval = 0 }) {
   const { data, error, loading, refetch } = useQuery(GET_NEWS, {
     pollInterval,
-    skip: !hasEndpoint,
   });
   const newsItems = getNewsItems(data);
 
@@ -83,21 +77,17 @@ export default function NewsList({
         </Text>
       </Intro>
 
-      {!hasEndpoint ? (
-        <ErrorState message="Unable to load news." />
-      ) : null}
+      {loading ? <LoadingState message="Loading news..." /> : null}
 
-      {hasEndpoint && loading ? <LoadingState message="Loading news..." /> : null}
-
-      {hasEndpoint && error ? (
+      {error ? (
         <ErrorState message="Unable to load news." onRetry={() => refetch()} />
       ) : null}
 
-      {hasEndpoint && !loading && !error && newsItems.length === 0 ? (
+      {!loading && !error && newsItems.length === 0 ? (
         <EmptyState title="No news available." />
       ) : null}
 
-      {hasEndpoint && !loading && !error && newsItems.length > 0 ? (
+      {!loading && !error && newsItems.length > 0 ? (
         <Grid>
           {newsItems.map((newsItem) => (
             <NewsCard key={newsItem.id} news={newsItem} />

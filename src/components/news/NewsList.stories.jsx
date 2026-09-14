@@ -39,9 +39,6 @@ function withApolloMock(news) {
 const meta = {
   title: "News/NewsList",
   component: NewsList,
-  args: {
-    endpointReady: true,
-  },
 };
 
 export default meta;
