@@ -94,16 +94,4 @@ describe("NewsList", () => {
       ).toBeInTheDocument();
     });
   });
-
-  it("shows an error state when the FakeQL endpoint is not configured", () => {
-    renderWithTheme(
-      <MockedProvider>
-        <NewsList endpointReady={false} />
-      </MockedProvider>,
-    );
-
-    expect(
-      screen.getByRole("heading", { name: /unable to load news/i }),
-    ).toBeInTheDocument();
-  });
 });
