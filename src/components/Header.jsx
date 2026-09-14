@@ -135,6 +135,9 @@ export default function Header({ initialSession = null }) {
           <NavLink href="/contact" $active={pathname === "/contact"}>
             Contact
           </NavLink>
+          <NavLink href="/news" $active={pathname === "/news"}>
+            News
+          </NavLink>
           <NavLink href="/cart" $active={pathname === "/cart"}>
             Cart ({cartCount})
           </NavLink>

@@ -17,6 +17,7 @@ describe("MobileMenu", () => {
     await user.click(button);
 
     expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("News").closest("a")).toHaveAttribute("href", "/news");
     expect(screen.getByText("Cart (3)").closest("a")).toHaveAttribute("href", "/cart");
     expect(screen.getByText("Login").closest("a")).toHaveAttribute("href", "/login");
 
