@@ -6,11 +6,13 @@ import Typography from "../Typography/Typography";
 
 const Panel = styled.section`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.sm};
+  justify-items: start;
+  gap: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.border};
+  border-top: 3px solid ${({ theme }) => theme.colors.accent};
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surface};
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: clamp(1.5rem, 4vw, 2.5rem);
   box-shadow: ${({ theme }) => theme.shadows.soft};
 `;
 
