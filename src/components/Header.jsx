@@ -12,19 +12,24 @@ const HeaderWrap = styled.header`
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid rgba(229, 222, 213, 0.86);
-  background: rgba(255, 250, 244, 0.9);
-  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(221, 217, 208, 0.9);
+  background: rgba(251, 247, 240, 0.92);
+  box-shadow: 0 4px 18px rgba(38, 50, 45, 0.035);
+  backdrop-filter: blur(16px);
 `;
 
 const Bar = styled.div`
   display: flex;
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
-  min-height: 72px;
+  min-height: 76px;
   align-items: center;
   justify-content: space-between;
   gap: ${({ theme }) => theme.spacing.lg};
   margin: 0 auto;
+
+  @media (max-width: 900px) {
+    min-height: 66px;
+  }
 `;
 
 const Brand = styled(Link)`
@@ -32,7 +37,8 @@ const Brand = styled(Link)`
   align-items: center;
   gap: 0.55rem;
   color: ${({ theme }) => theme.colors.text};
-  font-size: 1.25rem;
+  min-height: 44px;
+  font-size: 1.2rem;
   font-weight: 800;
   letter-spacing: 0;
 
@@ -48,9 +54,9 @@ const Brand = styled(Link)`
 const DesktopNav = styled.nav`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.lg};
+  gap: 1.2rem;
 
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     display: none;
   }
 `;
