@@ -6,9 +6,10 @@ import styled from "styled-components";
 
 const MenuButton = styled.button`
   display: none;
+  min-width: 72px;
   min-height: 44px;
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 999px;
+  border-radius: ${({ theme }) => theme.radii.pill};
   background: rgba(255, 255, 255, 0.66);
   color: ${({ theme }) => theme.colors.text};
   padding: 0.55rem 1rem;
@@ -22,7 +23,7 @@ const MenuButton = styled.button`
     background: ${({ theme }) => theme.colors.surface};
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -32,16 +33,16 @@ const MenuButton = styled.button`
 const Panel = styled.nav`
   display: none;
 
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     display: ${({ $open }) => ($open ? "flex" : "none")};
     flex-direction: column;
-    gap: ${({ theme }) => theme.spacing.xs};
+    gap: 0.25rem;
     border-top: 1px solid ${({ theme }) => theme.colors.border};
-    background: ${({ theme }) => theme.colors.surfaceWarm};
+    background: rgba(251, 247, 240, 0.98);
     box-shadow: ${({ theme }) => theme.shadows.card};
     padding: ${({ theme }) => theme.spacing.md}
       max(1rem, calc((100% - ${({ theme }) => theme.layout.maxWidth}) / 2));
@@ -53,7 +54,17 @@ const MobileLink = styled(Link)`
   min-height: 44px;
   align-items: center;
   color: ${({ theme }) => theme.colors.text};
+  border-radius: ${({ theme }) => theme.radii.sm};
+  padding: 0.55rem 0.75rem;
   font-weight: 750;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.backgroundAlt};
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
 `;
 
 const MobileButton = styled.button`
@@ -63,9 +74,15 @@ const MobileButton = styled.button`
   border: 0;
   background: transparent;
   color: ${({ theme }) => theme.colors.text};
-  padding: 0;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  padding: 0.55rem 0.75rem;
   font: inherit;
   font-weight: 750;
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.backgroundAlt};
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
 
   &:disabled {
     cursor: wait;
