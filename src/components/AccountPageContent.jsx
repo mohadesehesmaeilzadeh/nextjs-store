@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Typography from "./ui/Typography/Typography";
+import { useAuth } from "./AuthProvider";
 
 const Page = styled.div`
   width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
@@ -25,7 +28,20 @@ const Label = styled(Typography)`
   font-weight: ${({ theme }) => theme.typography.weights.bold};
 `;
 
-export default function AccountPageContent({ session }) {
+export default function AccountPageContent() {
+  const router = useRouter();
+  const { isHydrated, session } = useAuth();
+
+  useEffect(() => {
+    if (isHydrated && !session) {
+      router.push("/login");
+    }
+  }, [isHydrated, router, session]);
+
+  if (!session) {
+    return null;
+  }
+
   return (
     <Page>
       <Panel aria-labelledby="account-title">
@@ -33,8 +49,7 @@ export default function AccountPageContent({ session }) {
           Account
         </Typography>
         <Typography>
-          This protected page is rendered only after the server reads a valid
-          demo auth cookie.
+          This protected page is shown only after a valid demo sign-in.
         </Typography>
         <div>
           <Label variant="caption">Name</Label>

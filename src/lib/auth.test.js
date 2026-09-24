@@ -1,11 +1,17 @@
 import {
-  createSessionToken,
+  AUTH_STORAGE_KEY,
+  clearStoredAuthSession,
   demoUser,
   mockLogin,
-  readSessionFromToken,
+  readStoredAuthSession,
+  storeAuthSession,
 } from "./auth";
 
 describe("mock auth helpers", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   it("accepts the demo email and a long enough password", async () => {
     await expect(
       mockLogin({ email: "DEMO@nextstore.test", password: "password123" }),
@@ -21,18 +27,27 @@ describe("mock auth helpers", () => {
     ).rejects.toThrow(/invalid login/i);
   });
 
-  it("creates and reads a simple mock session token", () => {
-    const token = createSessionToken(demoUser);
+  it("stores and reads the demo session", () => {
+    storeAuthSession(demoUser);
 
-    expect(readSessionFromToken(token)).toEqual({
-      id: demoUser.id,
-      name: demoUser.name,
-      email: demoUser.email,
-    });
+    expect(readStoredAuthSession()).toEqual(demoUser);
   });
 
-  it("returns null for invalid session tokens", () => {
-    expect(readSessionFromToken("not-valid-json")).toBeNull();
-    expect(readSessionFromToken()).toBeNull();
+  it("returns null for invalid stored sessions", () => {
+    window.localStorage.setItem(AUTH_STORAGE_KEY, "not-valid-json");
+    expect(readStoredAuthSession()).toBeNull();
+
+    window.localStorage.setItem(
+      AUTH_STORAGE_KEY,
+      JSON.stringify({ id: "other-user", email: "other@example.com" }),
+    );
+    expect(readStoredAuthSession()).toBeNull();
+  });
+
+  it("clears a stored session", () => {
+    storeAuthSession(demoUser);
+    clearStoredAuthSession();
+
+    expect(readStoredAuthSession()).toBeNull();
   });
 });

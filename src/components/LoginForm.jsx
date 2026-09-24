@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Button from "./ui/Button/Button";
 import Input from "./ui/Input/Input";
 import Typography from "./ui/Typography/Typography";
+import { useAuth } from "./AuthProvider";
 
 const Page = styled.div`
   width: min(100% - 2.5rem, ${({ theme }) => theme.layout.maxWidth});
@@ -61,12 +62,19 @@ const HelpText = styled(Typography)`
 
 export default function LoginForm() {
   const router = useRouter();
+  const { isHydrated, login, session } = useAuth();
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isHydrated && session) {
+      router.push("/");
+    }
+  }, [isHydrated, router, session]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -83,21 +91,8 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Unable to sign in.");
-      }
-
+      await login(values);
       router.push("/");
-      router.refresh();
     } catch (nextError) {
       setError(nextError.message);
     } finally {

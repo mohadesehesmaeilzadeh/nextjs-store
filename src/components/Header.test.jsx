@@ -5,6 +5,10 @@ import { renderWithProviders } from "../test-utils/renderWithProviders";
 import Header from "./Header";
 
 describe("Header", () => {
+  afterEach(() => {
+    window.localStorage.clear();
+  });
+
   it("renders primary navigation links with correct destinations", () => {
     usePathname.mockReturnValue("/contact");
 
@@ -53,15 +57,13 @@ describe("Header", () => {
   });
 
   it("shows account and logout actions when authenticated", () => {
-    renderWithProviders(
-      <Header
-        initialSession={{
+    renderWithProviders(<Header />, {
+      authSession: {
           id: "demo-customer",
           name: "Demo Customer",
           email: "demo@nextstore.test",
-        }}
-      />,
-    );
+      },
+    });
 
     const nav = screen.getByRole("navigation", { name: /main navigation/i });
     expect(within(nav).getByRole("link", { name: /account/i })).toHaveAttribute(
@@ -72,29 +74,22 @@ describe("Header", () => {
     expect(within(nav).queryByRole("link", { name: /login/i })).not.toBeInTheDocument();
   });
 
-  it("calls logout API and redirects to login", async () => {
+  it("clears the session and redirects to login", async () => {
     const user = userEvent.setup();
     const push = jest.fn();
-    const refresh = jest.fn();
-    global.fetch = jest.fn().mockResolvedValue({ ok: true });
-    useRouter.mockReturnValue({ push, refresh });
+    useRouter.mockReturnValue({ push });
 
-    renderWithProviders(
-      <Header
-        initialSession={{
+    renderWithProviders(<Header />, {
+      authSession: {
           id: "demo-customer",
           name: "Demo Customer",
           email: "demo@nextstore.test",
-        }}
-      />,
-    );
+      },
+    });
 
     await user.click(screen.getByRole("button", { name: /logout/i }));
 
-    expect(global.fetch).toHaveBeenCalledWith("/api/auth/logout", {
-      method: "POST",
-    });
     expect(push).toHaveBeenCalledWith("/login");
-    expect(refresh).toHaveBeenCalled();
+    expect(screen.getByRole("link", { name: /login/i })).toBeInTheDocument();
   });
 });
