@@ -1,5 +1,5 @@
 import { screen, within } from "@testing-library/react";
-import { products } from "../../data/products";
+import { products } from "../../test-utils/productFixtures";
 import { renderWithProviders } from "../../test-utils/renderWithProviders";
 import OrderSummary from "./OrderSummary";
 
