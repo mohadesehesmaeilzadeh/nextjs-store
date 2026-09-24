@@ -2,11 +2,73 @@ const http = require("node:http");
 const { spawn } = require("node:child_process");
 
 const baseURL = "http://localhost:3000";
+const productsApiURL = "http://127.0.0.1:3100/products";
 const serverArgs = ["./node_modules/next/dist/bin/next", "dev"];
 const playwrightArgs = ["test", ...process.argv.slice(2)];
 
+const products = [
+  {
+    id: 1,
+    title: "Wireless Headphones",
+    price: 89,
+    category: "electronics",
+    thumbnail: "https://cdn.dummyjson.com/e2e/wireless-headphones.webp",
+    images: ["https://cdn.dummyjson.com/e2e/wireless-headphones.webp"],
+    description: "Comfortable wireless headphones for work and travel.",
+  },
+  {
+    id: 2,
+    title: "Smart Desk Lamp",
+    price: 46,
+    category: "home",
+    thumbnail: "https://cdn.dummyjson.com/e2e/smart-desk-lamp.webp",
+    images: ["https://cdn.dummyjson.com/e2e/smart-desk-lamp.webp"],
+    description: "A modern lamp with simple brightness controls.",
+  },
+  {
+    id: 3,
+    title: "Everyday Backpack",
+    price: 72,
+    category: "lifestyle",
+    thumbnail: "https://cdn.dummyjson.com/e2e/everyday-backpack.webp",
+    images: ["https://cdn.dummyjson.com/e2e/everyday-backpack.webp"],
+    description: "A clean backpack with room for daily essentials.",
+  },
+];
+
 let serverProcess;
+let productsApiServer;
 let stopping = false;
+
+function startProductsApi() {
+  productsApiServer = http.createServer((request, response) => {
+    const requestUrl = new URL(request.url, productsApiURL);
+    response.setHeader("Content-Type", "application/json");
+
+    if (requestUrl.pathname === "/products") {
+      response.end(JSON.stringify({ products }));
+      return;
+    }
+
+    const match = requestUrl.pathname.match(/^\/products\/(\d+)$/);
+    const product = match
+      ? products.find((item) => item.id === Number(match[1]))
+      : null;
+
+    if (!product) {
+      response.statusCode = 404;
+      response.end(JSON.stringify({ message: "Product not found" }));
+      return;
+    }
+
+    response.end(JSON.stringify(product));
+  });
+
+  return new Promise((resolve, reject) => {
+    productsApiServer.once("error", reject);
+    productsApiServer.listen(3100, "127.0.0.1", resolve);
+  });
+}
 
 function waitForServer(url, timeoutMs = 120000) {
   const startedAt = Date.now();
@@ -37,14 +99,27 @@ function waitForServer(url, timeoutMs = 120000) {
 }
 
 function stopServer() {
-  if (!serverProcess || stopping) {
+  if (stopping) {
     return Promise.resolve();
   }
 
   stopping = true;
 
+  const stopProductsApi = new Promise((resolve) => {
+    if (!productsApiServer) {
+      resolve();
+      return;
+    }
+
+    productsApiServer.close(() => resolve());
+  });
+
+  if (!serverProcess) {
+    return stopProductsApi;
+  }
+
   if (process.platform === "win32") {
-    return new Promise((resolve) => {
+    const stopNextServer = new Promise((resolve) => {
       const killer = spawn("taskkill", [
         "/pid",
         String(serverProcess.pid),
@@ -58,15 +133,19 @@ function stopServer() {
       });
       killer.on("exit", () => resolve());
     });
+
+    return Promise.all([stopNextServer, stopProductsApi]);
   }
 
   serverProcess.kill("SIGTERM");
-  return Promise.resolve();
+  return stopProductsApi;
 }
 
 async function run() {
+  await startProductsApi();
+
   serverProcess = spawn(process.execPath, serverArgs, {
-    env: process.env,
+    env: { ...process.env, PRODUCTS_API_URL: productsApiURL },
     shell: false,
     stdio: "inherit",
   });
