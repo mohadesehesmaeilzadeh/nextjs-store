@@ -1,5 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
-import { products } from "../../data/products";
+import { products } from "../../test-utils/productFixtures";
 import { selectCartItems } from "../../store/slices/cartSlice";
 import { selectHasDeliveryInfo } from "../../store/slices/checkoutSlice";
 import { renderWithProviders } from "../../test-utils/renderWithProviders";
