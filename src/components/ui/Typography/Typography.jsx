@@ -7,11 +7,17 @@ const variantStyles = {
     color: ${({ theme }) => theme.colors.text};
     font-size: ${({ theme }) => theme.typography.sizes.xxxl};
     font-weight: ${({ theme }) => theme.typography.weights.bold};
-    line-height: 1.02;
+    line-height: 1.04;
+    letter-spacing: 0;
+    text-wrap: balance;
 
     @media (max-width: 640px) {
-      font-size: 2.45rem;
+      font-size: 2.4rem;
       line-height: ${({ theme }) => theme.typography.lineHeights.tight};
+    }
+
+    @media (max-width: 380px) {
+      font-size: 2.15rem;
     }
   `,
   h2: css`
@@ -19,12 +25,15 @@ const variantStyles = {
     font-size: ${({ theme }) => theme.typography.sizes.xxl};
     font-weight: ${({ theme }) => theme.typography.weights.bold};
     line-height: 1.15;
+    letter-spacing: 0;
+    text-wrap: balance;
   `,
   h3: css`
     color: ${({ theme }) => theme.colors.text};
     font-size: ${({ theme }) => theme.typography.sizes.xl};
     font-weight: ${({ theme }) => theme.typography.weights.bold};
     line-height: 1.28;
+    letter-spacing: 0;
   `,
   body: css`
     color: ${({ theme }) => theme.colors.muted};
@@ -43,6 +52,7 @@ const variantStyles = {
     font-size: ${({ theme }) => theme.typography.sizes.xs};
     font-weight: ${({ theme }) => theme.typography.weights.bold};
     line-height: ${({ theme }) => theme.typography.lineHeights.normal};
+    letter-spacing: 0;
     text-transform: uppercase;
   `,
 };
