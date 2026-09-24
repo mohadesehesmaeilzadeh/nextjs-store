@@ -1,6 +1,6 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { products } from "../data/products";
+import { products } from "../test-utils/productFixtures";
 import { selectCartCount } from "../store/slices/cartSlice";
 import { renderWithProviders } from "../test-utils/renderWithProviders";
 import ProductDetailsPage from "./ProductDetailsPage";
@@ -9,18 +9,7 @@ describe("ProductDetailsPage", () => {
   const product = products[0];
 
   it("renders valid product details and a back link", () => {
-    renderWithProviders(<ProductDetailsPage productId={product.id} />, {
-      preloadedState: {
-        products: {
-          items: products,
-          status: "succeeded",
-          error: null,
-          selectedItem: null,
-          selectedStatus: "idle",
-          selectedError: null,
-        },
-      },
-    });
+    renderWithProviders(<ProductDetailsPage product={product} />);
 
     expect(screen.getByRole("heading", { name: product.name })).toBeInTheDocument();
     expect(screen.getByText(product.category)).toBeInTheDocument();
@@ -38,21 +27,7 @@ describe("ProductDetailsPage", () => {
 
   it("adds the selected product to the cart", async () => {
     const user = userEvent.setup();
-    const { store } = renderWithProviders(
-      <ProductDetailsPage productId={product.id} />,
-      {
-        preloadedState: {
-          products: {
-            items: products,
-            status: "succeeded",
-            error: null,
-            selectedItem: null,
-            selectedStatus: "idle",
-            selectedError: null,
-          },
-        },
-      },
-    );
+    const { store } = renderWithProviders(<ProductDetailsPage product={product} />);
 
     await user.click(screen.getByRole("button", { name: /add to cart/i }));
 
@@ -62,25 +37,4 @@ describe("ProductDetailsPage", () => {
     );
   });
 
-  it("shows product not found for an invalid product id", async () => {
-    renderWithProviders(<ProductDetailsPage productId="999999" />, {
-      preloadedState: {
-        products: {
-          items: [],
-          status: "succeeded",
-          error: null,
-          selectedItem: null,
-          selectedStatus: "succeeded",
-          selectedError: null,
-        },
-      },
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole("heading", { name: /product not found/i }),
-      ).toBeInTheDocument();
-    });
-    expect(screen.getByRole("button", { name: /try again/i })).toBeInTheDocument();
-  });
 });

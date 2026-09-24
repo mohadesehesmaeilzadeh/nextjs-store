@@ -1,31 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  clearSelectedProduct,
-  fetchProductById,
-  selectProducts,
-  selectSelectedProduct,
-  selectSelectedProductError,
-  selectSelectedProductStatus,
-} from "../store/slices/productsSlice";
-import {
-  ErrorState,
-  LoadingState,
-} from "./ui/AsyncState/AsyncState";
 import AddToCartButton from "./cart/AddToCartButton";
 import Button from "./ui/Button/Button";
 import Typography from "./ui/Typography/Typography";
 
 const Page = styled.div`
-  width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
+  width: min(100% - 2.5rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
   padding: 3.75rem 0 4.5rem;
 
   @media (max-width: 640px) {
+    width: min(100% - 1.25rem, ${({ theme }) => theme.layout.maxWidth});
     padding: 2.5rem 0 3rem;
   }
 `;
@@ -34,7 +21,7 @@ const Detail = styled.article`
   display: grid;
   grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.84fr);
   gap: 3.5rem;
-  align-items: center;
+  align-items: start;
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
@@ -61,8 +48,13 @@ const ProductImage = styled.img`
 
 const Content = styled.div`
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
   align-content: center;
+  padding-top: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 800px) {
+    padding-top: 0;
+  }
 `;
 
 const Category = styled(Typography)`
@@ -90,87 +82,19 @@ const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing.sm};
+
+  @media (max-width: 440px) {
+    display: grid;
+
+    & > * {
+      width: 100%;
+    }
+  }
 `;
 
 const BackLink = styled(Button)``;
 
-const Empty = styled.section`
-  display: grid;
-  max-width: 640px;
-  gap: ${({ theme }) => theme.spacing.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.surfaceWarm};
-  padding: ${({ theme }) => theme.spacing.xl};
-  box-shadow: ${({ theme }) => theme.shadows.soft};
-`;
-
-export default function ProductDetailsPage({ productId }) {
-  const dispatch = useDispatch();
-  const products = useSelector(selectProducts);
-  const selectedProduct = useSelector(selectSelectedProduct);
-  const selectedStatus = useSelector(selectSelectedProductStatus);
-  const selectedError = useSelector(selectSelectedProductError);
-  const productFromList = products.find((item) => String(item.id) === productId);
-  const product =
-    productFromList ||
-    (selectedProduct && String(selectedProduct.id) === productId
-      ? selectedProduct
-      : null);
-
-  useEffect(() => {
-    if (!productFromList) {
-      dispatch(clearSelectedProduct());
-      dispatch(fetchProductById(productId));
-    }
-  }, [dispatch, productFromList, productId]);
-
-  if (!product && selectedStatus === "loading") {
-    return (
-      <Page>
-        <LoadingState message="Loading product..." />
-      </Page>
-    );
-  }
-
-  if (!product && selectedStatus === "failed") {
-    return (
-      <Page>
-        <ErrorState
-          message={selectedError || "Unable to load this product."}
-          onRetry={() => dispatch(fetchProductById(productId))}
-        />
-      </Page>
-    );
-  }
-
-  if (!product && selectedStatus === "succeeded") {
-    return (
-      <Page>
-        <Empty>
-          <Title forwardedAs="h1" variant="h2">
-            Product not found
-          </Title>
-          <Description>
-            The product you are looking for does not exist or may have been
-            removed.
-          </Description>
-          <BackLink forwardedAs={Link} href="/" variant="secondary">
-            Back to Store
-          </BackLink>
-        </Empty>
-      </Page>
-    );
-  }
-
-  if (!product) {
-    return (
-      <Page>
-        <LoadingState message="Loading product..." />
-      </Page>
-    );
-  }
-
+export default function ProductDetailsPage({ product }) {
   return (
     <Page>
       <Detail>
