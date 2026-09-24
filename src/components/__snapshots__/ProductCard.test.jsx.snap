@@ -3,56 +3,56 @@
 exports[`ProductCard matches the stable product card snapshot 1`] = `
 <div>
   <article
-    class="sc-4cebc19e-0 hbcESJ"
+    class="sc-420231b4-0 cjYuLe"
   >
     <div
-      class="sc-4cebc19e-1 gEJOsM"
+      class="sc-420231b4-1 eCCJvm"
     >
       <img
         alt="Wireless Headphones"
-        class="sc-4cebc19e-2 bXVHOV"
+        class="sc-420231b4-2 ejfyGr"
         loading="lazy"
         src="/images/products/wireless-headphones.jpg"
       />
     </div>
     <div
-      class="sc-4cebc19e-3 SdOXl"
+      class="sc-420231b4-3 hDfUua"
     >
       <span
-        class="sc-63f1fb9a-0 bHOsFq sc-4cebc19e-4"
+        class="sc-eeb7e673-0 gABMxn sc-420231b4-4"
       >
         Electronics
       </span>
       <h3
-        class="sc-63f1fb9a-0 zAVdG sc-4cebc19e-5"
+        class="sc-eeb7e673-0 hRjVqB sc-420231b4-5"
       >
         Wireless Headphones
       </h3>
       <p
-        class="sc-63f1fb9a-0 eKUtZG sc-4cebc19e-6"
+        class="sc-eeb7e673-0 hORqLx sc-420231b4-6"
       >
         Comfortable wireless headphones for work and travel.
       </p>
       <div
-        class="sc-4cebc19e-8 ihvLLg"
+        class="sc-420231b4-8 eSHqja"
       >
         <p
-          class="sc-4cebc19e-7 jezLor"
+          class="sc-420231b4-7 fqPFWb"
         >
           $
           89
         </p>
         <div
-          class="sc-4cebc19e-9 bMYjGY"
+          class="sc-420231b4-9 knIjOC"
         >
           <a
-            class="sc-172dac95-0 hiFfnC sc-4cebc19e-10"
+            class="sc-994784a0-0 fIKPgp sc-420231b4-10"
             href="/products/1"
           >
             View
           </a>
           <button
-            class="sc-172dac95-0 dIzGyV"
+            class="sc-994784a0-0 lkknzO"
             type="button"
           >
             Add
