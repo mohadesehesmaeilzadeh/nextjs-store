@@ -14,6 +14,15 @@ const Row = styled.article`
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surface};
   padding: ${({ theme }) => theme.spacing.md};
+  box-shadow: 0 4px 16px rgba(38, 50, 45, 0.035);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.borderStrong};
+    box-shadow: ${({ theme }) => theme.shadows.soft};
+  }
 
   @media (max-width: 720px) {
     grid-template-columns: 82px minmax(0, 1fr);
@@ -60,6 +69,10 @@ const Actions = styled.div`
 
   @media (max-width: 440px) {
     grid-template-columns: 1fr;
+
+    & > * {
+      width: 100%;
+    }
   }
 `;
 
