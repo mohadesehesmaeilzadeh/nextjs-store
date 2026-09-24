@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { selectCartCount } from "../store/slices/cartSlice";
+import { useAuth } from "./AuthProvider";
 import MobileMenu from "./MobileMenu";
 
 const HeaderWrap = styled.header`
@@ -106,24 +107,22 @@ const NavButton = styled.button`
   }
 `;
 
-export default function Header({ initialSession = null }) {
+export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const cartCount = useSelector(selectCartCount);
+  const { logout, session } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const isAuthenticated = Boolean(initialSession);
+  const isAuthenticated = Boolean(session);
 
   async function handleLogout() {
     setIsLoggingOut(true);
 
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-      });
+      logout();
     } finally {
       setIsLoggingOut(false);
       router.push("/login");
-      router.refresh();
     }
   }
 

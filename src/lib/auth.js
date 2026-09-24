@@ -1,22 +1,9 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
-export const AUTH_COOKIE_NAME = "nextstore_session";
+export const AUTH_STORAGE_KEY = "nextstore-session";
 
 export const demoUser = {
   id: "demo-customer",
   name: "Demo Customer",
   email: "demo@nextstore.test",
-};
-
-const sessionMaxAge = 60 * 60 * 24 * 7;
-
-export const authCookieOptions = {
-  httpOnly: true,
-  sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
-  path: "/",
-  maxAge: sessionMaxAge,
 };
 
 function delay(ms) {
@@ -44,29 +31,16 @@ export async function mockLogin({ email, password }) {
   return demoUser;
 }
 
-export function createSessionToken(user) {
-  const session = {
-    sub: user.id,
-    name: user.name,
-    email: user.email,
-    issuedAt: Date.now(),
-  };
-
-  return Buffer.from(JSON.stringify(session)).toString("base64url");
-}
-
-export function readSessionFromToken(token) {
-  if (!token) return null;
-
+export function readStoredAuthSession() {
   try {
-    const session = JSON.parse(Buffer.from(token, "base64url").toString("utf8"));
+    const session = JSON.parse(window.localStorage.getItem(AUTH_STORAGE_KEY));
 
-    if (session.sub !== demoUser.id || session.email !== demoUser.email) {
+    if (session?.id !== demoUser.id || session.email !== demoUser.email) {
       return null;
     }
 
     return {
-      id: session.sub,
+      id: session.id,
       name: session.name || demoUser.name,
       email: session.email,
     };
@@ -75,40 +49,10 @@ export function readSessionFromToken(token) {
   }
 }
 
-export async function getAuthSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
-
-  return readSessionFromToken(token);
+export function storeAuthSession(session) {
+  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
 }
 
-export async function requireAuth() {
-  const session = await getAuthSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  return session;
-}
-
-export async function setAuthCookie(token) {
-  const cookieStore = await cookies();
-
-  cookieStore.set({
-    name: AUTH_COOKIE_NAME,
-    value: token,
-    ...authCookieOptions,
-  });
-}
-
-export async function clearAuthCookie() {
-  const cookieStore = await cookies();
-
-  cookieStore.set({
-    name: AUTH_COOKIE_NAME,
-    value: "",
-    ...authCookieOptions,
-    maxAge: 0,
-  });
+export function clearStoredAuthSession() {
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
 }

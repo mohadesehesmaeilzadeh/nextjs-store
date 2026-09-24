@@ -5,6 +5,7 @@ import { ThemeProvider } from "styled-components";
 import cartReducer from "../store/slices/cartSlice";
 import checkoutReducer from "../store/slices/checkoutSlice";
 import { theme } from "../styles/theme";
+import { AuthProvider } from "../components/AuthProvider";
 
 export function createTestStore(preloadedState) {
   return configureStore({
@@ -19,6 +20,7 @@ export function createTestStore(preloadedState) {
 export function renderWithProviders(
   ui,
   {
+    authSession = null,
     preloadedState,
     store = createTestStore(preloadedState),
     ...renderOptions
@@ -26,9 +28,11 @@ export function renderWithProviders(
 ) {
   function Wrapper({ children }) {
     return (
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-      </Provider>
+      <AuthProvider initialSession={authSession}>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </Provider>
+      </AuthProvider>
     );
   }
 

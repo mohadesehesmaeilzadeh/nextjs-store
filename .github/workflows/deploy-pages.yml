@@ -29,10 +29,18 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Install npm 11.6.1
+        run: npm install -g npm@11.6.1
+
+      - name: Show versions
+        run: |
+          node -v
+          npm -v
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site
+      - name: Build
         run: npm run build
 
       - name: Setup Pages
