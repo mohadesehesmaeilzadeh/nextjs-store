@@ -25,11 +25,24 @@ const Control = styled.textarea`
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.text};
-  padding: 0.75rem;
+  padding: 0.78rem 0.9rem;
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
     opacity 160ms ease;
+
+  &:hover:not(:disabled) {
+    border-color: ${({ theme, $invalid }) =>
+      $invalid ? theme.colors.danger : theme.colors.borderStrong};
+  }
+
+  &:focus-visible {
+    border-color: ${({ theme, $invalid }) =>
+      $invalid ? theme.colors.danger : theme.colors.primary};
+    box-shadow: 0 0 0 4px
+      ${({ theme, $invalid }) =>
+        $invalid ? "rgba(180, 35, 24, 0.08)" : "rgba(47, 102, 87, 0.09)"};
+  }
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.softText};
