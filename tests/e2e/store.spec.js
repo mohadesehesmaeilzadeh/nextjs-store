@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { products } from "../../src/data/products";
 
 async function signIn(page) {
   await page.goto("/login");
@@ -18,15 +17,88 @@ test("store homepage loads products and supports add to cart", async ({ page }) 
     page.getByRole("heading", { name: /quietly useful pieces/i }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: /shop the edit/i })).toBeVisible();
-  await expect(page.getByText(`${products.length} products`)).toBeVisible();
 
-  await expect(page.getByRole("heading", { name: products[0].name })).toBeVisible();
-  await expect(page.getByRole("heading", { name: products[1].name })).toBeVisible();
+  const productCards = page.locator("#products article");
+  const productCount = await productCards.count();
+  expect(productCount).toBeGreaterThan(0);
+  await expect(page.getByText(`${productCount} products`)).toBeVisible();
+  await expect(productCards.first().getByRole("heading")).toBeVisible();
+  await expect(productCards.first().getByRole("img")).toHaveAttribute(
+    "src",
+    /cdn\.dummyjson\.com/,
+  );
   await expect(page.getByRole("link", { name: /^view$/i }).first()).toBeVisible();
 
   await page.getByRole("button", { name: /^add$/i }).first().click();
   await expect(page.getByRole("button", { name: /added to cart/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /cart \(1\)/i })).toBeVisible();
+});
+
+test("catalog filters work together and clear back to all products", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const productCards = page.locator("#products article");
+  const initialCount = await productCards.count();
+  const firstCard = productCards.first();
+  const productName = (await firstCard.getByRole("heading").textContent()).trim();
+  const cardText = await firstCard.textContent();
+  const categoryOptions = await page
+    .getByLabel("Category")
+    .locator("option")
+    .allTextContents();
+  const category = categoryOptions.find(
+    (option) => option !== "All categories" && cardText.includes(option),
+  );
+  const priceText = (await firstCard.getByText(/^\$\d/).textContent()).trim();
+  const price = priceText.replace("$", "");
+
+  await page.getByLabel("Search").fill(productName);
+  await page.getByLabel("Category").selectOption({ label: category });
+  await page.getByLabel("Minimum price").fill(price);
+  await page.getByLabel("Maximum price").fill(price);
+
+  await expect(page.getByText("1 product", { exact: true })).toBeVisible();
+  await expect(productCards).toHaveCount(1);
+  await expect(productCards.first().getByRole("heading")).toHaveText(productName);
+
+  await page.getByLabel("Search").fill("not a product in this catalog");
+  await expect(
+    page.getByRole("heading", { name: "No products match your filters." }),
+  ).toBeVisible();
+
+  await page
+    .getByRole("button", { name: "Clear Filters" })
+    .last()
+    .click();
+  await expect(productCards).toHaveCount(initialCount);
+  await expect(page.getByLabel("Search")).toHaveValue("");
+  await expect(page.getByLabel("Category")).toHaveValue("");
+});
+
+test("cart persists across refresh and removal is persisted", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: /^add$/i }).first().click();
+  await expect(page.getByRole("link", { name: /cart \(1\)/i })).toBeVisible();
+  await page.waitForFunction(() => {
+    const cart = JSON.parse(localStorage.getItem("nextstore-cart") || "[]");
+    return cart.length === 1 && cart[0].quantity === 1;
+  });
+
+  await page.reload();
+  await expect(page.getByRole("link", { name: /cart \(1\)/i })).toBeVisible();
+  await page.getByRole("link", { name: /cart \(1\)/i }).click();
+  await page.getByRole("button", { name: /remove/i }).click();
+  await expect(page.getByRole("heading", { name: /your cart is empty/i })).toBeVisible();
+  await page.waitForFunction(
+    () => JSON.parse(localStorage.getItem("nextstore-cart") || "[]").length === 0,
+  );
+
+  await page.reload();
+  await expect(page.getByRole("heading", { name: /your cart is empty/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /cart \(0\)/i })).toBeVisible();
 });
 
 test("desktop navigation moves through About, Contact, and Store", async ({
@@ -54,15 +126,19 @@ test("desktop navigation moves through About, Contact, and Store", async ({
 test("product details flow opens a product and returns to store", async ({
   page,
 }) => {
-  const product = products[0];
-
   await page.goto("/");
-  await page.getByRole("link", { name: /^view$/i }).first().click();
+  const firstProduct = page.locator("#products article").first();
+  const productName = await firstProduct.getByRole("heading").textContent();
+  const productPrice = await firstProduct.getByText(/^\$\d/).textContent();
+  const productHref = await firstProduct
+    .getByRole("link", { name: /^view$/i })
+    .getAttribute("href");
 
-  await expect(page).toHaveURL(`/products/${product.id}`);
-  await expect(page.getByRole("heading", { name: product.name })).toBeVisible();
-  await expect(page.getByText(`$${product.price}`)).toBeVisible();
-  await expect(page.getByText(product.description)).toBeVisible();
+  await firstProduct.getByRole("link", { name: /^view$/i }).click();
+
+  await expect(page).toHaveURL(productHref);
+  await expect(page.getByRole("heading", { name: productName })).toBeVisible();
+  await expect(page.getByText(productPrice, { exact: true })).toBeVisible();
 
   await page.getByRole("link", { name: /back to store/i }).click();
   await expect(page).toHaveURL("/");
@@ -77,7 +153,7 @@ test("invalid product route shows a readable not-found state", async ({
   await expect(
     page.getByRole("heading", { name: /product not found/i }),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: /try again/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /back to store/i })).toBeVisible();
 });
 
 test("contact form validates and submits from the user perspective", async ({
@@ -244,7 +320,9 @@ test.describe("mobile layout", () => {
 
     // The /products/i regex checks readable product content with case-insensitive matching.
     await expect(page.getByText(/products/i).first()).toBeVisible();
-    await expect(page.getByRole("heading", { name: products[0].name })).toBeVisible();
+    await expect(
+      page.locator("#products article").first().getByRole("heading"),
+    ).toBeVisible();
     await expect(page.getByRole("link", { name: /^view$/i }).first()).toBeVisible();
 
     expect(
