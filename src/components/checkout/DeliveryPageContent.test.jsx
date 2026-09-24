@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import { products } from "../../data/products";
+import { products } from "../../test-utils/productFixtures";
 import { renderWithProviders } from "../../test-utils/renderWithProviders";
 import DeliveryPageContent from "./DeliveryPageContent";
 

@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { afterEach, jest } from "@jest/globals";
 
 jest.mock("next/navigation", () => ({
+  notFound: jest.fn(),
   usePathname: jest.fn(() => "/"),
   useRouter: jest.fn(() => ({
     back: jest.fn(),

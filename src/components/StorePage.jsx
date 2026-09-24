@@ -1,30 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  fetchProducts,
-  selectProducts,
-  selectProductsError,
-  selectProductsStatus,
-} from "../store/slices/productsSlice";
-import {
-  EmptyState,
-  ErrorState,
-  LoadingState,
-} from "./ui/AsyncState/AsyncState";
+import { filterAndSortProducts } from "../lib/productFilters";
+import { EmptyState } from "./ui/AsyncState/AsyncState";
 import Button from "./ui/Button/Button";
 import Typography from "./ui/Typography/Typography";
 import ProductCard from "./ProductCard";
 
 const Page = styled.div`
-  width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
+  width: min(100% - 2.5rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
   padding: 3.5rem 0 4.5rem;
 
   @media (max-width: 640px) {
+    width: min(100% - 1.25rem, ${({ theme }) => theme.layout.maxWidth});
     padding: 2rem 0 3rem;
   }
 `;
@@ -32,7 +23,7 @@ const Page = styled.div`
 const Hero = styled.section`
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.78fr);
-  gap: 3rem;
+  gap: 3.5rem;
   align-items: center;
   padding: 1.25rem 0 5.25rem;
 
@@ -87,17 +78,25 @@ const SecondaryLink = styled(Link)`
   border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
   color: ${({ theme }) => theme.colors.text};
   font-weight: 750;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+
+  &:hover {
+    border-bottom-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primary};
+  }
 `;
 
 const HeroVisual = styled.div`
   position: relative;
-  min-height: 440px;
+  min-height: 450px;
   border: 1px solid rgba(229, 222, 213, 0.78);
   border-radius: 8px;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 244, 0.92)),
     ${({ theme }) => theme.colors.backgroundAlt};
-  box-shadow: ${({ theme }) => theme.shadows.card};
+  box-shadow: 0 24px 54px rgba(38, 50, 45, 0.11);
   overflow: hidden;
 
   &::before {
@@ -213,52 +212,181 @@ const Count = styled.p`
   white-space: nowrap;
 `;
 
+const FilterPanel = styled.section`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: 2rem;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radii.md};
+  background: rgba(255, 255, 255, 0.88);
+  padding: ${({ theme }) => theme.spacing.lg};
+  box-shadow: ${({ theme }) => theme.shadows.soft};
+
+  @media (max-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.md};
+  }
+`;
+
+const FilterHeader = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.md};
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const FilterTitle = styled(Typography)``;
+
+const FilterGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(150px, 1fr));
+  gap: ${({ theme }) => theme.spacing.md};
+  align-items: end;
+
+  @media (max-width: 940px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Field = styled.div`
+  display: grid;
+  min-width: 0;
+  gap: ${({ theme }) => theme.spacing.xs};
+`;
+
+const Label = styled.label`
+  color: ${({ theme }) => theme.colors.text};
+  font-size: ${({ theme }) => theme.typography.sizes.sm};
+  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+`;
+
+const Control = styled.input`
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radii.md};
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.text};
+  padding: 0.78rem 0.9rem;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.softText};
+  }
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.borderStrong};
+  }
+
+  &:focus-visible {
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 4px rgba(47, 102, 87, 0.09);
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radii.md};
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.text};
+  padding: 0.78rem 0.9rem;
+  font: inherit;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.borderStrong};
+  }
+
+  &:focus-visible {
+    border-color: ${({ theme }) => theme.colors.primary};
+    outline: 3px solid ${({ theme }) => theme.colors.focus};
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(47, 102, 87, 0.09);
+  }
+`;
+
+const PriceGroup = styled.fieldset`
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  gap: ${({ theme }) => theme.spacing.xs};
+`;
+
+const PriceLegend = styled.legend`
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: ${({ theme }) => theme.typography.sizes.sm};
+  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+`;
+
+const PriceFields = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: ${({ theme }) => theme.spacing.xs};
+`;
+
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.4rem;
-
-  & > article:nth-child(3n + 2) {
-    margin-top: 1rem;
-  }
+  gap: 1.5rem;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    & > article:nth-child(3n + 2) {
-      margin-top: 0;
-    }
-
-    & > article:nth-child(even) {
-      margin-top: 0.85rem;
-    }
   }
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
 
-    & > article:nth-child(even) {
-      margin-top: 0;
-    }
   }
 `;
 
-export default function StorePage() {
-  const dispatch = useDispatch();
-  const products = useSelector(selectProducts);
-  const status = useSelector(selectProductsStatus);
-  const error = useSelector(selectProductsError);
+export default function StorePage({ products }) {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sort, setSort] = useState("");
   const featured = products[0];
   const secondary = products[2] || products[0];
+  const categories = useMemo(
+    () => [...new Set(products.map((product) => product.category))].sort(),
+    [products],
+  );
+  const visibleProducts = useMemo(
+    () =>
+      filterAndSortProducts(products, {
+        search,
+        category,
+        minPrice,
+        maxPrice,
+        sort,
+      }),
+    [products, search, category, minPrice, maxPrice, sort],
+  );
+  const hasActiveFilters = Boolean(
+    search || category || minPrice || maxPrice || sort,
+  );
 
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchProducts());
-    }
-  }, [dispatch, status]);
-
-  function retryProducts() {
-    dispatch(fetchProducts());
+  function clearFilters() {
+    setSearch("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+    setSort("");
   }
 
   return (
@@ -310,29 +438,115 @@ export default function StorePage() {
               details, and warm materials.
             </SectionIntro>
           </SectionCopy>
-          <Count>{products.length} products</Count>
+          <Count aria-live="polite">
+            {visibleProducts.length}{" "}
+            {visibleProducts.length === 1 ? "product" : "products"}
+          </Count>
         </SectionHeader>
 
-        {status === "loading" ? (
-          <LoadingState message="Loading products..." />
+        {products.length > 0 ? (
+          <FilterPanel aria-labelledby="filter-title">
+            <FilterHeader>
+              <FilterTitle id="filter-title" variant="h3">
+                Filter products
+              </FilterTitle>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={!hasActiveFilters}
+                onClick={clearFilters}
+              >
+                Clear Filters
+              </Button>
+            </FilterHeader>
+            <FilterGrid>
+              <Field>
+                <Label htmlFor="product-search">Search</Label>
+                <Control
+                  id="product-search"
+                  type="search"
+                  value={search}
+                  placeholder="Search by product name"
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </Field>
+
+              <Field>
+                <Label htmlFor="product-category">Category</Label>
+                <Select
+                  id="product-category"
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value)}
+                >
+                  <option value="">All categories</option>
+                  {categories.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+
+              <PriceGroup>
+                <PriceLegend>Price range</PriceLegend>
+                <PriceFields>
+                  <Control
+                    aria-label="Minimum price"
+                    type="number"
+                    min="0"
+                    inputMode="numeric"
+                    value={minPrice}
+                    placeholder="Min"
+                    onChange={(event) => setMinPrice(event.target.value)}
+                  />
+                  <Control
+                    aria-label="Maximum price"
+                    type="number"
+                    min="0"
+                    inputMode="numeric"
+                    value={maxPrice}
+                    placeholder="Max"
+                    onChange={(event) => setMaxPrice(event.target.value)}
+                  />
+                </PriceFields>
+              </PriceGroup>
+
+              <Field>
+                <Label htmlFor="product-sort">Sort by</Label>
+                <Select
+                  id="product-sort"
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value)}
+                >
+                  <option value="">Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="name-asc">Name: A-Z</option>
+                </Select>
+              </Field>
+            </FilterGrid>
+          </FilterPanel>
         ) : null}
 
-        {status === "failed" ? (
-          <ErrorState
-            message={error || "Unable to load products."}
-            onRetry={retryProducts}
-          />
-        ) : null}
-
-        {status === "succeeded" && products.length === 0 ? (
+        {products.length === 0 ? (
           <EmptyState title="No products are available.">
             Please check back soon for new arrivals.
           </EmptyState>
         ) : null}
 
-        {products.length > 0 ? (
+        {products.length > 0 && visibleProducts.length === 0 ? (
+          <EmptyState
+            title="No products match your filters."
+            actionLabel="Clear Filters"
+            onAction={clearFilters}
+          >
+            Try a different search, category, or price range.
+          </EmptyState>
+        ) : null}
+
+        {visibleProducts.length > 0 ? (
           <Grid>
-            {products.map((product) => (
+            {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </Grid>

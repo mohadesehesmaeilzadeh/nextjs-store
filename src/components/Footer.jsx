@@ -5,10 +5,10 @@ import styled from "styled-components";
 import Typography from "./ui/Typography/Typography";
 
 const FooterWrap = styled.footer`
-  margin-top: 2rem;
+  margin-top: 3rem;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   background:
-    linear-gradient(180deg, rgba(255, 250, 244, 0.92), rgba(241, 229, 216, 0.72)),
+    linear-gradient(180deg, rgba(251, 247, 240, 0.95), rgba(232, 239, 236, 0.7)),
     ${({ theme }) => theme.colors.surfaceWarm};
 `;
 
@@ -18,7 +18,7 @@ const Inner = styled.div`
   grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.8fr);
   gap: 2.5rem;
   margin: 0 auto;
-  padding: 2.4rem 0;
+  padding: 3rem 0;
 
   @media (max-width: 760px) {
     grid-template-columns: 1fr;
@@ -77,6 +77,7 @@ const FooterLink = styled(Link)`
   align-items: center;
   color: ${({ theme }) => theme.colors.muted};
   font-weight: 650;
+  transition: color 160ms ease;
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
@@ -109,7 +110,7 @@ export default function Footer() {
           <LinkGroup aria-label="Store details">
             <GroupTitle variant="caption">Store</GroupTitle>
             <PlainText variant="bodySmall">Curated essentials</PlainText>
-            <PlainText variant="bodySmall">Local sample data</PlainText>
+            <PlainText variant="bodySmall">Server-fetched catalog</PlainText>
             <PlainText variant="bodySmall">Real product photos</PlainText>
           </LinkGroup>
         </FooterNav>

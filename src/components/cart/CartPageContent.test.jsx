@@ -1,6 +1,6 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { products } from "../../data/products";
+import { products } from "../../test-utils/productFixtures";
 import { renderWithProviders } from "../../test-utils/renderWithProviders";
 import CartPageContent from "./CartPageContent";
 
@@ -49,6 +49,37 @@ describe("CartPageContent", () => {
     expect(screen.getByText("1")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /remove/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /your cart is empty/i }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("clears all cart items", async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(<CartPageContent />, {
+      preloadedState: {
+        cart: {
+          items: [
+            cartItem,
+            {
+              id: products[1].id,
+              image: products[1].image,
+              name: products[1].name,
+              price: products[1].price,
+              quantity: 2,
+            },
+          ],
+        },
+      },
+    });
+
+    expect(screen.getAllByText("$181").length).toBeGreaterThan(0);
+
+    await user.click(screen.getByRole("button", { name: /clear cart/i }));
 
     await waitFor(() => {
       expect(

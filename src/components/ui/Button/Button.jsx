@@ -18,13 +18,16 @@ const variantStyles = {
   `,
   secondary: css`
     border-color: ${({ theme }) => theme.colors.border};
-    background: ${({ theme }) => theme.colors.surfaceWarm};
+    background: ${({ theme }) => theme.colors.surface};
     color: ${({ theme }) => theme.colors.primaryDark};
+    box-shadow: 0 2px 8px rgba(38, 50, 45, 0.04);
 
     &:hover:not(:disabled) {
       border-color: ${({ theme }) => theme.colors.primary};
       background: ${({ theme }) => theme.colors.primary};
       color: #ffffff;
+      box-shadow: 0 8px 18px rgba(49, 95, 82, 0.14);
+      transform: translateY(-1px);
     }
   `,
   danger: css`
@@ -40,18 +43,18 @@ const variantStyles = {
 
 const sizeStyles = {
   small: css`
-    min-height: 38px;
-    padding: 0.5rem 0.8rem;
+    min-height: 44px;
+    padding: 0.58rem 0.9rem;
     font-size: ${({ theme }) => theme.typography.sizes.sm};
   `,
   medium: css`
-    min-height: 44px;
-    padding: 0.7rem 1rem;
+    min-height: 46px;
+    padding: 0.72rem 1.05rem;
     font-size: ${({ theme }) => theme.typography.sizes.sm};
   `,
   large: css`
-    min-height: 48px;
-    padding: 0.85rem 1.15rem;
+    min-height: 50px;
+    padding: 0.9rem 1.25rem;
     font-size: ${({ theme }) => theme.typography.sizes.md};
   `,
 };
@@ -83,6 +86,10 @@ const StyledButton = styled.button`
     cursor: not-allowed;
     opacity: 0.55;
     transform: none;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 `;
 

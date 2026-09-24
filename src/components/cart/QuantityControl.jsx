@@ -19,6 +19,14 @@ const StepButton = styled.button`
   color: ${({ theme }) => theme.colors.text};
   font-size: 1.1rem;
   font-weight: ${({ theme }) => theme.typography.weights.bold};
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.backgroundAlt};
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
 
   &:disabled {
     cursor: not-allowed;
@@ -31,6 +39,7 @@ const Quantity = styled.span`
   color: ${({ theme }) => theme.colors.text};
   font-weight: ${({ theme }) => theme.typography.weights.bold};
   text-align: center;
+  font-variant-numeric: tabular-nums;
 `;
 
 export default function QuantityControl({

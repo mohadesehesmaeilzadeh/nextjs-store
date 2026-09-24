@@ -1,9 +1,18 @@
+import { notFound } from "next/navigation";
 import ProductDetailsPage from "../../../components/ProductDetailsPage";
-import { products } from "../../../data/products";
+import { getProductById, getProducts } from "../../../lib/productCatalog";
+
+export async function generateStaticParams() {
+  const products = await getProducts();
+
+  return products.map((product) => ({
+    id: String(product.id),
+  }));
+}
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const product = products.find((item) => item.id === id);
+  const product = await getProductById(id);
 
   return {
     title: product ? `${product.name} | NextStore` : "Product not found | NextStore",
@@ -15,6 +24,11 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductPage({ params }) {
   const { id } = await params;
+  const product = await getProductById(id);
 
-  return <ProductDetailsPage productId={id} />;
+  if (!product) {
+    notFound();
+  }
+
+  return <ProductDetailsPage product={product} />;
 }

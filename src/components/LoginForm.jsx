@@ -8,9 +8,14 @@ import Input from "./ui/Input/Input";
 import Typography from "./ui/Typography/Typography";
 
 const Page = styled.div`
-  width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
+  width: min(100% - 2.5rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
   padding: 3.75rem 0 4.5rem;
+
+  @media (max-width: 640px) {
+    width: min(100% - 1.25rem, ${({ theme }) => theme.layout.maxWidth});
+    padding: 2.5rem 0 3rem;
+  }
 `;
 
 const Intro = styled.section`
@@ -32,9 +37,17 @@ const Form = styled.form`
   gap: ${({ theme }) => theme.spacing.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radii.md};
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.9);
   padding: 2rem;
   box-shadow: ${({ theme }) => theme.shadows.soft};
+
+  @media (max-width: 520px) {
+    padding: ${({ theme }) => theme.spacing.lg};
+
+    & > button {
+      width: 100%;
+    }
+  }
 `;
 
 const ErrorText = styled(Typography)`

@@ -14,14 +14,23 @@ const GlobalStyles = createGlobalStyle`
 
   body {
     min-width: 0;
+    min-height: 100vh;
     margin: 0;
-    background:
-      radial-gradient(circle at top left, rgba(241, 218, 200, 0.42), transparent 36rem),
-      linear-gradient(180deg, ${({ theme }) => theme.colors.surfaceWarm} 0%, ${({ theme }) => theme.colors.background} 42%);
+    background: linear-gradient(
+      180deg,
+      ${({ theme }) => theme.colors.surfaceWarm} 0,
+      ${({ theme }) => theme.colors.background} 34rem
+    );
     color: ${({ theme }) => theme.colors.text};
     font-family: ${({ theme }) => theme.typography.fontFamily};
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: ${({ theme }) => theme.typography.lineHeights.normal};
     text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  main {
+    min-height: calc(100vh - 260px);
   }
 
   img, svg {
@@ -36,7 +45,8 @@ const GlobalStyles = createGlobalStyle`
 
   button,
   input,
-  textarea {
+  textarea,
+  select {
     font: inherit;
   }
 
@@ -47,9 +57,26 @@ const GlobalStyles = createGlobalStyle`
   button:focus-visible,
   a:focus-visible,
   input:focus-visible,
-  textarea:focus-visible {
+  textarea:focus-visible,
+  select:focus-visible {
     outline: 3px solid ${({ theme }) => theme.colors.focus};
     outline-offset: 3px;
+  }
+
+  ::selection {
+    background: ${({ theme }) => theme.colors.accentSoft};
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 `;
 

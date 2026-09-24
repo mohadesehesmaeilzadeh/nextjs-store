@@ -1,4 +1,4 @@
-import { products } from "../data/products";
+import { products } from "../test-utils/productFixtures";
 import { addToCart, clearCart, selectCartCount } from "./slices/cartSlice";
 import { store } from "./store";
 
@@ -12,7 +12,6 @@ describe("store", () => {
       expect.objectContaining({
         cart: expect.any(Object),
         checkout: expect.any(Object),
-        products: expect.any(Object),
       }),
     );
   });

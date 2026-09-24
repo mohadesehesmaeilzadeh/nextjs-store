@@ -1,7 +1,7 @@
 import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRouter } from "next/navigation";
-import { products } from "../../data/products";
+import { products } from "../../test-utils/productFixtures";
 import { renderWithProviders } from "../../test-utils/renderWithProviders";
 import PaymentPageContent from "./PaymentPageContent";
 

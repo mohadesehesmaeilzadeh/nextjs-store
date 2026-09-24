@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
+  clearCart,
   decreaseQuantity,
   increaseQuantity,
   removeFromCart,
@@ -16,9 +17,14 @@ import Typography from "../ui/Typography/Typography";
 import CartItem from "./CartItem";
 
 const Page = styled.div`
-  width: min(100% - 2rem, ${({ theme }) => theme.layout.maxWidth});
+  width: min(100% - 2.5rem, ${({ theme }) => theme.layout.maxWidth});
   margin: 0 auto;
   padding: 3.5rem 0 4.5rem;
+
+  @media (max-width: 640px) {
+    width: min(100% - 1.25rem, ${({ theme }) => theme.layout.maxWidth});
+    padding: 2.5rem 0 3rem;
+  }
 `;
 
 const Header = styled.header`
@@ -50,8 +56,9 @@ const Summary = styled.aside`
   display: grid;
   gap: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.border};
+  border-top: 3px solid ${({ theme }) => theme.colors.primary};
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.surfaceWarm};
+  background: ${({ theme }) => theme.colors.surface};
   padding: ${({ theme }) => theme.spacing.lg};
   box-shadow: ${({ theme }) => theme.shadows.soft};
 
@@ -66,11 +73,18 @@ const SummaryLine = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
   color: ${({ theme }) => theme.colors.text};
   font-weight: ${({ theme }) => theme.typography.weights.bold};
+
+  & + & {
+    border-top: 1px solid ${({ theme }) => theme.colors.border};
+    padding-top: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 const CheckoutLink = styled(Button)``;
 
 const ShoppingLink = styled(Button)``;
+
+const ClearButton = styled(Button)``;
 
 const EmptyAction = styled.div`
   margin-top: ${({ theme }) => theme.spacing.md};
@@ -140,6 +154,14 @@ export default function CartPageContent() {
           <ShoppingLink forwardedAs={Link} href="/" fullWidth variant="secondary">
             Continue Shopping
           </ShoppingLink>
+          <ClearButton
+            type="button"
+            fullWidth
+            variant="danger"
+            onClick={() => dispatch(clearCart())}
+          >
+            Clear Cart
+          </ClearButton>
         </Summary>
       </Layout>
     </Page>
