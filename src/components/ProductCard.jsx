@@ -11,12 +11,12 @@ const Card = styled.article`
   min-width: 0;
   height: 100%;
   flex-direction: column;
-  gap: 1.05rem;
+  gap: 1.1rem;
   border: 1px solid rgba(229, 222, 213, 0.9);
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surface};
-  padding: 0.85rem;
-  box-shadow: 0 4px 16px rgba(55, 47, 38, 0.045);
+  padding: 0.9rem;
+  box-shadow: 0 5px 18px rgba(38, 50, 45, 0.045);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
@@ -26,6 +26,11 @@ const Card = styled.article`
     border-color: rgba(189, 111, 69, 0.42);
     box-shadow: ${({ theme }) => theme.shadows.card};
     transform: translateY(-2px);
+  }
+
+  &:focus-within {
+    border-color: rgba(47, 102, 87, 0.5);
+    box-shadow: ${({ theme }) => theme.shadows.card};
   }
 `;
 
@@ -58,7 +63,7 @@ const Content = styled.div`
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.55rem;
   padding: 0 0.2rem 0.15rem;
 `;
 
@@ -71,7 +76,7 @@ const Description = styled(Typography)``;
 const Price = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.text};
-  font-size: 1.18rem;
+  font-size: 1.16rem;
   font-weight: 850;
 `;
 
