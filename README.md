@@ -1,267 +1,152 @@
 # NextStore
 
-NextStore is a beginner-friendly online store built with Next.js App Router and styled-components. It uses local product data, custom reusable components, dynamic product routes, and a responsive layout.
+NextStore is a responsive storefront built with the Next.js App Router. It combines a server-fetched product catalog with client-side product discovery, a persistent Redux cart, guarded account routes, and a tested demo checkout flow.
 
-Repository: [nextjs-store](https://github.com/mohadesehesmaeilzadeh/nextjs-store)
+**Live Demo:** _Add deployed URL here_
+
+Repository: [github.com/mohadesehesmaeilzadeh/nextjs-store](https://github.com/mohadesehesmaeilzadeh/nextjs-store)
+
+## Screenshots
+
+### Home
+
+![NextStore home page](docs/screenshots/home.png)
+
+### Product Discovery
+
+![NextStore product search, filters, and sorting](docs/screenshots/products.png)
+
+### Product Details
+
+![NextStore product details](docs/screenshots/product-details.png)
+
+### Shopping Cart
+
+![NextStore shopping cart](docs/screenshots/cart.png)
+
+### Mobile Experience
+
+![NextStore mobile storefront](docs/screenshots/mobile.png)
 
 ## Features
 
-- Store homepage with hero section and product grid
-- About page
-- Contact page with frontend validation
-- Dynamic product detail pages
-- Local product data
-- Local product images in `public/images/products`
-- Responsive layout for desktop, tablet, and mobile
-- CSS-in-JS styling with `styled-components`
-- Custom header, footer, mobile menu, and product cards
+- Server-rendered product listing and dynamic product detail pages
+- Search by product name, category and price filters, and sorting controls
+- Persistent shopping cart with quantity controls, removal, subtotal, and clear action
+- Responsive storefront, cart, forms, navigation, and checkout pages
+- Loading, error, empty, and custom not-found states
+- Demo authentication with a protected account page
+- Contact form validation and a multi-step demo checkout
+- News content loaded through Apollo Client
 
 ## Tech Stack
 
-- Next.js 16
-- React 19
-- JavaScript
-- styled-components
-- ESLint
+- Next.js 16 and React 19
+- JavaScript and styled-components
+- Redux Toolkit and React Redux
+- Apollo Client and GraphQL
+- Jest, React Testing Library, and Playwright
+- Storybook and ESLint
 
-No backend, authentication, Redux, database, Tailwind, Bootstrap, Material UI, or component library is used.
-
-## Project Structure
+## Architecture
 
 ```text
 src/
-  app/
-    about/
-      page.js
-    contact/
-      page.js
-    products/
-      [id]/
-        page.js
-    layout.js
-    page.js
-    providers.js
-
-  components/
-    AboutPageContent.jsx
-    ContactForm.jsx
-    Footer.jsx
-    Header.jsx
-    MobileMenu.jsx
-    ProductCard.jsx
-    ProductDetailsPage.jsx
-    StorePage.jsx
-
-  data/
-    products.js
-
-  lib/
-    registry.js
-
-  styles/
-    GlobalStyles.js
-    theme.js
-
-public/
-  images/
-    products/
-      bluetooth-speaker.jpg
-      ceramic-travel-mug.jpg
-      cotton-throw-blanket.jpg
-      desk-organizer.jpg
-      everyday-backpack.jpg
-      minimal-watch.jpg
-      smart-desk-lamp.jpg
-      wireless-headphones.jpg
+  app/                 App Router routes, layouts, API handlers, and route states
+  components/          Storefront, cart, checkout, and shared UI components
+  graphql/             GraphQL queries
+  lib/                 Product normalization, fetching, auth, and integrations
+  store/               Redux store, cart/checkout slices, and persistence provider
+  styles/              Theme tokens and global styles
+  test-utils/           Shared test fixtures and render helpers
+tests/e2e/              Playwright user-flow tests
+docs/screenshots/       Portfolio screenshots
 ```
 
-## Getting Started
+The UI is organized around reusable styled-components and a shared theme. Server concerns remain in App Router pages and `src/lib`, while interactive catalog, cart, form, and checkout behavior stays in focused client components.
 
-Install dependencies:
+## App Router
 
-```bash
-npm install
-```
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-Open:
-
-```text
-http://localhost:3000
-```
-
-If port `3000` is already in use, Next.js will show another local URL such as `http://localhost:3001`.
-
-## Available Scripts
-
-```bash
-npm run dev
-```
-
-Starts the development server.
-
-```bash
-npm run build
-```
-
-Creates a production build.
-
-```bash
-npm run start
-```
-
-Starts the production server after a successful build.
-
-```bash
-npm run lint
-```
-
-Runs ESLint.
-
-## Testing
-
-This project uses Jest with React Testing Library for unit, DOM/component,
-integration, and snapshot tests. Playwright is used only for End-to-End browser
-tests.
-
-Run the Jest suite:
-
-```bash
-npm test
-```
-
-Run Jest in watch mode:
-
-```bash
-npm run test:watch
-```
-
-Generate coverage:
-
-```bash
-npm run test:coverage
-```
-
-Run Playwright End-to-End tests:
-
-```bash
-npm run test:e2e
-```
-
-Open Playwright's interactive UI:
-
-```bash
-npm run test:e2e:ui
-```
-
-Run Jest and Playwright together:
-
-```bash
-npm run test:all
-```
-
-Snapshot tests are intentionally limited to stable reusable components. When a
-component output is intentionally changed, review the diff and update snapshots
-with:
-
-```bash
-npm test -- -u
-```
+The root layout provides the header, footer, theme, Apollo, and Redux providers. The storefront is server-rendered from `src/app/(store)/page.js`; product details use the dynamic `src/app/products/[id]/page.js` route. Route-level `loading.js`, `error.js`, and `not-found.js` files provide safe navigation states, and missing products call `notFound()`.
 
 ## Product Data
 
-Products are stored in:
+`src/lib/productCatalog.js` fetches listing and detail data from DummyJSON on the server with Next.js revalidation. Responses are normalized in `src/lib/productNormalizer.js` before reaching UI components, keeping the external API shape isolated from the storefront.
 
-```text
-src/data/products.js
+For deterministic end-to-end tests, the product API URL can be overridden with `PRODUCTS_API_URL`.
+
+## Cart Persistence
+
+Redux Toolkit owns cart actions and selectors. `StoreProvider` hydrates cart items from `localStorage` after mount and persists subsequent updates. Adding the same product increases its quantity, and totals are derived from the current cart state.
+
+## Search, Filter, and Sort
+
+The product listing supports name search, category selection, minimum and maximum prices, price ordering, and name ordering. Controls can be combined, reset together, and display live result counts and a no-results state. Sorting always works on a copied array so source product data is not mutated.
+
+## Testing
+
+Jest and React Testing Library cover components, Redux behavior, persistence, catalog normalization, filtering, route states, forms, and checkout flows. External product API requests are mocked in unit and integration tests.
+
+Playwright covers critical browser flows including product browsing, combined filters, product details, invalid routes, cart persistence, checkout, authentication, navigation, and mobile layout. Its runner starts a local product API fixture to keep server-fetch tests deterministic.
+
+```bash
+npm test
+npm run test:e2e
+npm run test:coverage
 ```
 
-Each product has:
+## Responsive Design
 
-- `id`
-- `name`
-- `price`
-- `category`
-- `image`
-- `shortDescription`
-- `description`
+The interface uses fluid containers, responsive grids, mobile navigation, visible keyboard focus, accessible form labels, and touch-friendly controls. Store, product, cart, checkout, and state views adapt across desktop, tablet, and mobile widths without changing their behavior.
 
-The store page maps over this array and renders a `ProductCard` for each product.
+## Installation
 
-## Dynamic Routes
-
-Product detail pages use the App Router dynamic route:
-
-```text
-src/app/products/[id]/page.js
+```bash
+git clone https://github.com/mohadesehesmaeilzadeh/nextjs-store.git
+cd nextjs-store
+npm install
+npm run dev
 ```
 
-The page reads the route `id`, finds the matching product with `find()`, and renders the product details. If no product exists for that `id`, the page shows a clean `Product not found` state instead of crashing.
+Open [http://localhost:3000](http://localhost:3000). Copy `.env.example` to `.env.local` only when environment overrides are needed.
 
-Example routes:
+## Available Scripts
 
-```text
-/products/1
-/products/2
-/products/999
-```
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Next.js development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Run the production server |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run Jest and React Testing Library tests |
+| `npm run test:watch` | Run Jest in watch mode |
+| `npm run test:coverage` | Generate Jest coverage |
+| `npm run test:e2e` | Run Playwright tests |
+| `npm run test:e2e:ui` | Open the Playwright test UI |
+| `npm run test:all` | Run Jest and Playwright |
+| `npm run storybook` | Start Storybook |
+| `npm run build-storybook` | Build static Storybook output |
 
-## styled-components Setup
+## Challenges
 
-The project uses `styled-components` for component styling and global styles.
+- Keeping browser-only cart persistence compatible with server rendering
+- Normalizing remote product data without leaking API-specific fields into components
+- Making combined filters predictable while preserving the original product collection
+- Handling loading, API failure, and missing-product states at the route level
+- Keeping end-to-end tests reliable when production data comes from an external service
 
-The compiler option is enabled in:
+## What I Learned
 
-```text
-next.config.js
-```
+- How to divide App Router server components from interactive client components
+- How Next.js caching and route boundaries shape data-loading UX
+- How to persist Redux state safely after hydration
+- How focused unit tests and a small browser suite complement each other
+- How a shared theme improves consistency across responsive component states
 
-Server-side style collection for the App Router is handled in:
+## Roadmap
 
-```text
-src/lib/registry.js
-```
-
-The theme and global styles are provided through:
-
-```text
-src/app/providers.js
-src/styles/theme.js
-src/styles/GlobalStyles.js
-```
-
-## Images
-
-Product images are local `.jpg` files inside:
-
-```text
-public/images/products
-```
-
-Product data references them with public paths such as:
-
-```text
-/images/products/wireless-headphones.jpg
-```
-
-This keeps the project reliable during local development because the UI does not depend on loading remote images at runtime.
-
-## Notes for Learners
-
-This project is intentionally simple. It focuses on core Next.js and React ideas:
-
-- file-based routing
-- shared layouts
-- dynamic routes
-- reusable components
-- props
-- local data
-- client components only where state or events are needed
-- CSS-in-JS with styled-components
-
-The contact form only handles data on the frontend. It logs successful submissions to the browser console and does not send anything to a backend.
+- Add the final portfolio screenshots and deployed demo URL
+- Replace demo authentication and checkout with production services
+- Add pagination or incremental catalog loading
+- Improve image optimization with an approved remote image configuration
+- Add automated accessibility checks to the browser suite
