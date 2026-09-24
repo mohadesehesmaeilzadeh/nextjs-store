@@ -1,6 +1,14 @@
 import { notFound } from "next/navigation";
 import ProductDetailsPage from "../../../components/ProductDetailsPage";
-import { getProductById } from "../../../lib/productCatalog";
+import { getProductById, getProducts } from "../../../lib/productCatalog";
+
+export async function generateStaticParams() {
+  const products = await getProducts();
+
+  return products.map((product) => ({
+    id: String(product.id),
+  }));
+}
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
